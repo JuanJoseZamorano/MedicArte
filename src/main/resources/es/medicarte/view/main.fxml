@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="es.medicarte.controller.MainController">
+
+    <top>
+        <Label text="MedicArte - Panel principal"
+               BorderPane.alignment="CENTER"
+               style="-fx-font-size: 18px; -fx-padding: 10;" />
+    </top>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Bienvenido al sistema" />
+            <Button text="Cerrar sesión" onAction="#handleLogout"/>
+        </VBox>
+    </center>
+
+</BorderPane>
