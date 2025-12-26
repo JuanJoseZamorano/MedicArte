@@ -1,6 +1,8 @@
 package es.medicarte.util;
 
 public class PasswordHashGenerator {
+// esta es una clase creada para pasar los pass planos a hash.
+    // solo la hemos usado para ejecutarla una vez
 
     public static void main(String[] args) {
 

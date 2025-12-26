@@ -52,12 +52,36 @@ public class LoginController {
             return;
         }
         // Login correcto
-        SceneManager.loadScene(
-                "/es/medicarte/view/main.fxml",
-                "MedicArte - Principal"
-        );
+        // Cargamos el dashboard diferente segun el rol iniciado
+        switch (usuario.getRol()) {
+
+            case "ADMIN":
+                SceneManager.loadScene(
+                        "/es/medicarte/view/admin_dashboard.fxml",
+                        "MedicArte - Administración"
+                );
+                break;
+
+            case "MEDICO":
+                SceneManager.loadScene(
+                        "/es/medicarte/view/medico_dashboard.fxml",
+                        "MedicArte - Área Médica"
+                );
+                break;
+
+            default:
+                showAlert(
+                        "Error de rol",
+                        "Rol de usuario no reconocido",
+                        Alert.AlertType.ERROR
+                );
+        }
+
     }
+
+
     // falta hacer la base de datos con el script
+    // creada 20-11-2025
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
