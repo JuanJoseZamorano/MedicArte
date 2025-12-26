@@ -4,7 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtils {
 
-    // Coste del algoritmo
+    // Coste del algoritmo sera 10.
     private static final int BCRYPT_COST = 10;
 
     /**
