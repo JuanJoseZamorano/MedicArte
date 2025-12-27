@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import es.medicarte.util.SceneManager;
 import es.medicarte.model.Usuario;
 import es.medicarte.model.UsuarioDAO;
+import es.medicarte.util.UserSession;
 
 public class LoginController {
 
@@ -53,6 +54,7 @@ public class LoginController {
         }
         // Login correcto
         // Cargamos el dashboard diferente segun el rol iniciado
+        UserSession.setUsuario(usuario);
         switch (usuario.getRol()) {
 
             case "ADMIN":

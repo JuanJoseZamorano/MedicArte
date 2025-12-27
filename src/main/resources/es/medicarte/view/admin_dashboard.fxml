@@ -10,8 +10,9 @@
             fx:controller="es.medicarte.controller.AdminDashboardController">
 
     <top>
-        <Label text="Panel de Administración - MedicArte"
-               style="-fx-font-size: 18px; -fx-padding: 10;" />
+<!--        añadimos el suaurio actual-->
+        <Label fx:id="lblUserInfo"
+               style="-fx-font-size: 16px; -fx-padding: 10;" />
     </top>
 
     <center>
