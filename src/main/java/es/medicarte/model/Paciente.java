@@ -27,6 +27,7 @@ public class Paciente {
     private String antecedentesFamiliares;
     private String tratamientoActual;
     private LocalDateTime creadoEn;
+    private String fotoPath;
 
     public Paciente() {
     }
@@ -240,5 +241,11 @@ public class Paciente {
 
     public void setCreadoEn(LocalDateTime creadoEn) {
         this.creadoEn = creadoEn;
+    }
+    public String getFotoPath() {
+        return fotoPath;
+    }
+    public void setFotoPath(String fotoPath) {
+        this.fotoPath = fotoPath;
     }
 }

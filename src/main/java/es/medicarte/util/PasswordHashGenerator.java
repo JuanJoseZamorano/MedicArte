@@ -7,9 +7,8 @@ public class PasswordHashGenerator {
     static void main(String[] args) {
 
         System.out.println("admin -> " + PasswordUtils.hashPassword("admin"));
-        System.out.println("medico123 -> " + PasswordUtils.hashPassword("medico123"));
-        System.out.println("recep123 -> " + PasswordUtils.hashPassword("recep123"));
-        System.out.println("aux123 -> " + PasswordUtils.hashPassword("aux123"));
-        System.out.println("inactivo123 -> " + PasswordUtils.hashPassword("inactivo123"));
+        System.out.println("medico1 -> " + PasswordUtils.hashPassword("medico1"));
+        System.out.println("medico2 -> " + PasswordUtils.hashPassword("medico2"));
+
     }
 }

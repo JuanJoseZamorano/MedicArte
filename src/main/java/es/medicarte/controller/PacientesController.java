@@ -2,12 +2,17 @@ package es.medicarte.controller;
 
 import es.medicarte.model.Paciente;
 import es.medicarte.model.PacienteDAO;
+import es.medicarte.util.FileUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import es.medicarte.util.SceneManager;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class PacientesController {
 
@@ -45,11 +50,15 @@ public class PacientesController {
 
     // ===== FOTO =====
     @FXML private ImageView imgFoto;
+    // ===== BOTONES =====
+    @FXML
+    private Button btnLimpiar;
 
     private final PacienteDAO pacienteDAO = new PacienteDAO();
     private final ObservableList<Paciente> pacientes = FXCollections.observableArrayList();
 
     private Paciente pacienteSeleccionado;
+    private String fotoSeleccionadaPath;
 
     @FXML
     private void initialize() {
@@ -57,6 +66,7 @@ public class PacientesController {
         configurarComboSexo();
         cargarPacientes();
         configurarSeleccion();
+        btnLimpiar.setVisible(false);
     }
 
     // =================== CONFIGURACIONES ===================
@@ -96,6 +106,18 @@ public class PacientesController {
 
     private void cargarPacienteEnFormulario(Paciente p) {
 
+        fotoSeleccionadaPath = p.getFotoPath();
+
+        if (fotoSeleccionadaPath != null && !fotoSeleccionadaPath.isBlank()) {
+            File file = new File(fotoSeleccionadaPath);
+            if (file.exists()) {
+                imgFoto.setImage(new Image(file.toURI().toString()));
+            } else {
+                imgFoto.setImage(null);
+            }
+        } else {
+            imgFoto.setImage(null);
+        }
         txtApellidos.setText(p.getApellidos());
         txtNombre.setText(p.getNombre());
         dpFechaNacimiento.setValue(p.getFechaNacimiento());
@@ -117,8 +139,8 @@ public class PacientesController {
         txtTratamiento.setText(p.getTratamientoActual());
         txtAlergias.setText(p.getAlergias());
 
-        // Foto se implementará más adelante
-        imgFoto.setImage(null);
+
+        btnLimpiar.setVisible(false);
     }
 
     @FXML
@@ -126,7 +148,9 @@ public class PacientesController {
 
         String dniIntroducido = txtDni.getText();
 
-        // === CASO INSERT ===
+    /* =========================================================
+       CASO INSERT (MODO ALTA)
+       ========================================================= */
         if (pacienteSeleccionado == null) {
 
             if (pacienteDAO.existsByDni(dniIntroducido)) {
@@ -137,22 +161,47 @@ public class PacientesController {
                 return;
             }
 
+            // 1. Creamos paciente SIN foto todavía
             Paciente p = new Paciente();
             rellenarPacienteDesdeFormulario(p);
+            p.setFotoPath(null);
 
             boolean ok = pacienteDAO.insert(p);
 
-            if (ok) {
-                cargarPacientes();
-                listPacientes.getSelectionModel().select(p);
-            } else {
+            if (!ok) {
                 new Alert(Alert.AlertType.ERROR, "No se pudo guardar el paciente").showAndWait();
+                return;
             }
 
+            // 2. Recargamos y obtenemos el paciente ya con ID
+            cargarPacientes();
+            Paciente nuevo = pacientes.stream()
+                    .filter(pa -> pa.getDni().equals(p.getDni()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (nuevo != null && fotoSeleccionadaPath != null) {
+                try {
+                    File origen = new File(fotoSeleccionadaPath);
+                    if (origen.exists()) {
+                        String rutaInterna = FileUtils.copiarFotoPaciente(origen, nuevo.getIdPaciente());
+                        nuevo.setFotoPath(rutaInterna);
+                        pacienteDAO.update(nuevo);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            listPacientes.getSelectionModel().select(nuevo);
+            pacienteSeleccionado = nuevo;
+            btnLimpiar.setVisible(false);
             return;
         }
 
-        // === CASO UPDATE ===
+    /* =========================================================
+       CASO UPDATE (MODO EDICIÓN)
+       ========================================================= */
         String dniOriginal = pacienteSeleccionado.getDni();
 
         if (!dniIntroducido.equals(dniOriginal)
@@ -165,20 +214,36 @@ public class PacientesController {
             return;
         }
 
+        // 1. Actualizamos datos normales
         rellenarPacienteDesdeFormulario(pacienteSeleccionado);
+
+        // 2. Si hay foto nueva, la copiamos
+        if (fotoSeleccionadaPath != null) {
+            try {
+                File origen = new File(fotoSeleccionadaPath);
+                if (origen.exists()) {
+                    String rutaInterna = FileUtils.copiarFotoPaciente(origen, pacienteSeleccionado.getIdPaciente());
+                    pacienteSeleccionado.setFotoPath(rutaInterna);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         boolean ok = pacienteDAO.update(pacienteSeleccionado);
 
         if (ok) {
             cargarPacientes();
             listPacientes.getSelectionModel().select(pacienteSeleccionado);
+            btnLimpiar.setVisible(false);
         } else {
             new Alert(Alert.AlertType.ERROR, "No se pudo actualizar el paciente").showAndWait();
         }
     }
 
-    private void rellenarPacienteDesdeFormulario(Paciente p) {
 
+    private void rellenarPacienteDesdeFormulario(Paciente p) {
+        p.setFotoPath(fotoSeleccionadaPath);
         p.setApellidos(txtApellidos.getText());
         p.setNombre(txtNombre.getText());
         p.setFechaNacimiento(dpFechaNacimiento.getValue());
@@ -201,11 +266,26 @@ public class PacientesController {
         p.setAlergias(txtAlergias.getText());
     }
 
+    @FXML
+    private void modoAlta() {
+
+        // Entramos en modo alta
+        pacienteSeleccionado = null;
+
+        // Limpiamos formulario
+        limpiarFormulario();
+
+        // Mostramos el botón Limpiar
+        btnLimpiar.setVisible(true);
+
+        // Quitamos selección de la lista
+        listPacientes.getSelectionModel().clearSelection();
+    }
 
     @FXML
     private void limpiarFormulario() {
 
-        pacienteSeleccionado = null;
+
 
         txtApellidos.clear();
         txtNombre.clear();
@@ -229,7 +309,9 @@ public class PacientesController {
         txtAlergias.clear();
 
         imgFoto.setImage(null);
-        listPacientes.getSelectionModel().clearSelection();
+        fotoSeleccionadaPath = null;
+        imgFoto.setImage(null);
+
     }
     @FXML
     private void buscarPacientes() {
@@ -280,6 +362,23 @@ public class PacientesController {
                 "/es/medicarte/view/medico_dashboard.fxml",
                 "MedicArte - Área Médica"
         );
+    }
+    @FXML
+    private void cambiarFoto() {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar foto del paciente");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File file = fileChooser.showOpenDialog(listPacientes.getScene().getWindow());
+
+        if (file != null) {
+            fotoSeleccionadaPath = file.getAbsolutePath();
+            Image image = new Image(file.toURI().toString());
+            imgFoto.setImage(image);
+        }
     }
 
 

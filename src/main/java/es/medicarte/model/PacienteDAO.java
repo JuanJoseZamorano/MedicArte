@@ -12,14 +12,14 @@ public class PacienteDAO {
             "INSERT INTO medicarte.paciente (" +
                     "dni, nombre, apellidos, fecha_nacimiento, sexo, telefono, email, " +
                     "direccion, provincia, cp, aseguradora, num_poliza, nuhsa, nuss, nhc, " +
-                    "grupo_sanguineo, alergias, antecedentes_personales, antecedentes_familiares, tratamiento_actual" +
-                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "grupo_sanguineo, alergias, antecedentes_personales, antecedentes_familiares, tratamiento_actual, foto_path" +
+                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_SQL =
             "UPDATE medicarte.paciente SET " +
                     "dni=?, nombre=?, apellidos=?, fecha_nacimiento=?, sexo=?, telefono=?, email=?, " +
                     "direccion=?, provincia=?, cp=?, aseguradora=?, num_poliza=?, nuhsa=?, nuss=?, nhc=?, " +
-                    "grupo_sanguineo=?, alergias=?, antecedentes_personales=?, antecedentes_familiares=?, tratamiento_actual=? " +
+                    "grupo_sanguineo=?, alergias=?, antecedentes_personales=?, antecedentes_familiares=?, tratamiento_actual=?, foto_path=? " +
                     "WHERE id_paciente=?";
 
 
@@ -43,6 +43,7 @@ public class PacienteDAO {
             ps.setString(2, p.getNombre());
             ps.setString(3, p.getApellidos());
 
+
             if (p.getFechaNacimiento() != null) {
                 ps.setDate(4, java.sql.Date.valueOf(p.getFechaNacimiento()));
             } else {
@@ -65,6 +66,7 @@ public class PacienteDAO {
             ps.setString(18, p.getAntecedentesPersonales());
             ps.setString(19, p.getAntecedentesFamiliares());
             ps.setString(20, p.getTratamientoActual());
+            ps.setString(21, p.getFotoPath());
 
             return ps.executeUpdate() == 1;
 
@@ -107,6 +109,7 @@ public class PacienteDAO {
         p.setDni(rs.getString("dni"));
         p.setNombre(rs.getString("nombre"));
         p.setApellidos(rs.getString("apellidos"));
+        p.setFotoPath(rs.getString("foto_path"));
 
         Date fecha = rs.getDate("fecha_nacimiento");
         if (fecha != null) {
@@ -147,6 +150,7 @@ public class PacienteDAO {
             ps.setString(2, p.getNombre());
             ps.setString(3, p.getApellidos());
 
+
             if (p.getFechaNacimiento() != null) {
                 ps.setDate(4, java.sql.Date.valueOf(p.getFechaNacimiento()));
             } else {
@@ -169,8 +173,9 @@ public class PacienteDAO {
             ps.setString(18, p.getAntecedentesPersonales());
             ps.setString(19, p.getAntecedentesFamiliares());
             ps.setString(20, p.getTratamientoActual());
+            ps.setString(21, p.getFotoPath());
+            ps.setInt(22, p.getIdPaciente());
 
-            ps.setInt(21, p.getIdPaciente());
 
             return ps.executeUpdate() == 1;
 
