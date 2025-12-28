@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="es.medicarte.controller.PacientesController">
+
+    <!-- ================= BÚSQUEDA ================= -->
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Apellidos"/>
+            <TextField fx:id="txtBuscarApellidos"/>
+
+            <Label text="Nombre"/>
+            <TextField fx:id="txtBuscarNombre"/>
+
+            <Label text="DNI"/>
+            <TextField fx:id="txtBuscarDni"/>
+
+            <Button text="Buscar"/>
+            <Button text="Añadir"/>
+            <Button text="Cancelar"/>
+        </HBox>
+    </top>
+
+    <!-- ================= LISTADO ================= -->
+    <left>
+        <VBox spacing="5" prefWidth="260">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Pacientes" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="listPacientes"/>
+        </VBox>
+    </left>
+
+    <!-- ================= CENTRO ================= -->
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <!-- ===== DATOS PERSONALES + FOTO ===== -->
+            <HBox spacing="20">
+
+                <!-- FOTO -->
+                <VBox spacing="10">
+                    <Label text="Foto"/>
+                    <ImageView fx:id="imgFoto"
+                               fitWidth="120"
+                               fitHeight="150"
+                               preserveRatio="true"
+                               style="-fx-border-color: #999;"/>
+                    <Button text="Cambiar foto"/>
+                </VBox>
+
+                <!-- FORMULARIO -->
+                <GridPane hgap="10" vgap="10">
+
+                    <!-- Fila 0 -->
+                    <Label text="Apellidos"/>
+                    <TextField fx:id="txtApellidos" GridPane.columnIndex="1"/>
+
+                    <Label text="Nombre" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtNombre" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 1 -->
+                    <Label text="Fecha Nac." GridPane.rowIndex="1"/>
+                    <DatePicker fx:id="dpFechaNacimiento" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Sexo" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                    <ComboBox fx:id="cmbSexo" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 2 -->
+                    <Label text="DNI" GridPane.rowIndex="2"/>
+                    <TextField fx:id="txtDni" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="NHC" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtNhc" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 3 -->
+                    <Label text="NUHSA" GridPane.rowIndex="3"/>
+                    <TextField fx:id="txtNuhsa" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="NUSS" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtNuss" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 4 -->
+                    <Label text="Teléfono" GridPane.rowIndex="4"/>
+                    <TextField fx:id="txtTelefono" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Email" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtEmail" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 5 -->
+                    <Label text="Dirección" GridPane.rowIndex="5"/>
+                    <TextField fx:id="txtDireccion" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                    <Label text="Provincia" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtProvincia" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 6 -->
+                    <Label text="Código Postal" GridPane.rowIndex="6"/>
+                    <TextField fx:id="txtCp" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                    <Label text="Aseguradora" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
+                    <TextField fx:id="txtAseguradora" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
+
+                    <!-- Fila 7 -->
+                    <Label text="Nº Póliza" GridPane.rowIndex="7"/>
+                    <TextField fx:id="txtPoliza" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                </GridPane>
+
+            </HBox>
+
+            <!-- ===== DATOS CLÍNICOS ===== -->
+            <TabPane side="BOTTOM">
+                <Tab text="Antecedentes personales">
+                    <TextArea fx:id="txtAntPersonales"/>
+                </Tab>
+                <Tab text="Antecedentes familiares">
+                    <TextArea fx:id="txtAntFamiliares"/>
+                </Tab>
+                <Tab text="Tratamiento">
+                    <TextArea fx:id="txtTratamiento"/>
+                </Tab>
+                <Tab text="Alergias">
+                    <TextArea fx:id="txtAlergias"/>
+                </Tab>
+            </TabPane>
+
+            <!-- ===== BOTONERA ===== -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+
+                <!-- IZQUIERDA -->
+                <HBox spacing="10">
+                    <Button text="Grabar" style="-fx-text-fill: blue;"/>
+                    <Button text="Eliminar" style="-fx-text-fill: red;"/>
+                    <Button text="Limpiar" style="-fx-text-fill: green;"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- DERECHA -->
+                <HBox spacing="10">
+                    <Button text="Ver citas"/>
+                    <Button text="Ver historial"/>
+                    <Button text="Crear cita"/>
+                </HBox>
+
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

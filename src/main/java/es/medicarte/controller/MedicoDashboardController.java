@@ -1,5 +1,6 @@
 package es.medicarte.controller;
 
+import es.medicarte.util.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import es.medicarte.util.UserSession;
@@ -16,5 +17,13 @@ public class MedicoDashboardController {
         if (u != null) {
             lblUserInfo.setText("Bienvenido, " + u.getUsername() + " (MEDICO)");
         }
+    }
+
+    @FXML
+    private void abrirPacientes() {
+        SceneManager.loadScene(
+                "/es/medicarte/view/pacientes.fxml",
+                "MedicArte - Pacientes"
+        );
     }
 }

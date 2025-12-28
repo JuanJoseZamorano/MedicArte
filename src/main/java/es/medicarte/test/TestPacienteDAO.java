@@ -36,5 +36,16 @@ public class TestPacienteDAO {
 
         boolean insertado = dao.insert(p);
         System.out.println("Insertado: " + insertado);
+        System.out.println("---- LISTADO DE PACIENTES ----");
+
+        dao.findAll().forEach(pa -> {
+            System.out.println(
+                    pa.getIdPaciente() + " | " +
+                            pa.getApellidos() + ", " +
+                            pa.getNombre() + " | DNI: " +
+                            pa.getDni()
+            );
+        });
     }
+
 }
