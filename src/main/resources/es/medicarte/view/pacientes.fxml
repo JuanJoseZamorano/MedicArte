@@ -25,9 +25,9 @@
             <Label text="DNI"/>
             <TextField fx:id="txtBuscarDni"/>
 
-            <Button text="Buscar"/>
+            <Button text="Buscar" onAction="#buscarPacientes"/>
             <Button text="Añadir"/>
-            <Button text="Cancelar"/>
+            <Button text="Cancelar" onAction="#cancelar"/>
         </HBox>
     </top>
 
@@ -145,9 +145,9 @@
 
                 <!-- IZQUIERDA -->
                 <HBox spacing="10">
-                    <Button text="Grabar" style="-fx-text-fill: blue;"/>
-                    <Button text="Eliminar" style="-fx-text-fill: red;"/>
-                    <Button text="Limpiar" style="-fx-text-fill: green;"/>
+                    <Button text="Grabar" onAction="#guardarPaciente" style="-fx-text-fill: blue;"/>
+                    <Button text="Eliminar" onAction="#eliminarPaciente" style="-fx-text-fill: red;"/>
+                    <Button text="Limpiar" onAction="#limpiarFormulario" style="-fx-text-fill: green;"/>
                 </HBox>
 
                 <Region HBox.hgrow="ALWAYS"/>
