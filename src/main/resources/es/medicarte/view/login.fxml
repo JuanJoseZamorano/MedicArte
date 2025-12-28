@@ -19,6 +19,7 @@
 
     <PasswordField fx:id="txtPassword" promptText="Contraseña" />
 
-    <Button text="Entrar" onAction="#handleLogin" />
+<!--    Convertimos el unico boton que tenemos ne defaul para que le "enter" accione le boton.-->
+    <Button text="Entrar" onAction="#handleLogin" defaultButton="true"/>
 
 </VBox>
