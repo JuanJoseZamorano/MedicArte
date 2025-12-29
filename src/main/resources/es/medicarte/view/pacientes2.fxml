@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="585.0" prefWidth="831.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.medicarte.controller.PacientesController">
+
+    <!-- ================= BÚSQUEDA ================= -->
+    <top>
+        <HBox prefHeight="58.0" prefWidth="831.0" spacing="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Label text="Apellidos" />
+            <TextField fx:id="txtBuscarApellidos" />
+
+            <Label text="Nombre" />
+            <TextField fx:id="txtBuscarNombre" />
+
+            <Label text="DNI" />
+            <TextField fx:id="txtBuscarDni" />
+
+            <Button onAction="#buscarPacientes" text="Buscar" />
+            <Button onAction="#modoAlta" text="Añadir" />
+            <Button onAction="#cancelar" text="Cancelar" />
+        </HBox>
+    </top>
+
+    <!-- ================= LISTADO ================= -->
+    <left>
+        <VBox prefHeight="508.0" prefWidth="216.0" spacing="5">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Label style="-fx-font-weight: bold;" text="Pacientes" />
+            <ListView fx:id="listPacientes" prefHeight="460.0" prefWidth="239.0" />
+        </VBox>
+    </left>
+
+    <!-- ================= CENTRO ================= -->
+    <center>
+        <VBox prefHeight="508.0" prefWidth="602.0" spacing="15">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <!-- ===== DATOS PERSONALES + FOTO ===== -->
+            <HBox prefHeight="281.0" prefWidth="550.0">
+            <GridPane prefHeight="253.0" prefWidth="596.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="471.9999755859375" minWidth="10.0" prefWidth="460.7999267578125" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.20001220703125" minWidth="10.0" prefWidth="133.60007324218748" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+            
+                            <!-- FOTO -->
+                            <VBox alignment="CENTER" prefHeight="186.0" prefWidth="218.0" spacing="10" GridPane.columnIndex="1">
+                                <ImageView fx:id="imgFoto" fitHeight="94.0" fitWidth="80.0" preserveRatio="true" style="-fx-border-color: #999;" />
+                                <Button minHeight="-Infinity" minWidth="-Infinity" onAction="#cambiarFoto" prefHeight="20.0" prefWidth="86.0" text="Cambiar foto">
+                              <font>
+                                 <Font size="9.0" />
+                              </font>
+                           </Button>
+                            </VBox>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.20001220703125" minWidth="10.0" prefWidth="62.399987792968744" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.80001220703124" minWidth="10.0" prefWidth="240.80001220703124" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.79999542236328" minWidth="0.0" prefWidth="54.39998779296877" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.0" minWidth="10.0" prefWidth="87.19997558593747" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                     
+                                         <!-- Fila 0 -->
+                                         <Label text="Apellidos" />
+                                         <TextField fx:id="txtApellidos" maxWidth="-Infinity" prefHeight="26.0" prefWidth="212.0" GridPane.columnIndex="1" />
+                     
+                                         <Label text="Nombre" GridPane.columnIndex="2" />
+                                         <TextField fx:id="txtNombre" prefHeight="26.0" prefWidth="50.0" GridPane.columnIndex="3" />
+                                 </children>
+                              </GridPane>
+                              <GridPane GridPane.rowIndex="2">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.20001220703125" minWidth="10.0" prefWidth="69.5999755859375" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="390.4000244140625" minWidth="10.0" prefWidth="390.4000244140625" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                     
+                                         <!-- Fila 5 -->
+                                         <Label text="Dirección" />
+                                         <TextField fx:id="txtDireccion" GridPane.columnIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <GridPane GridPane.rowIndex="1">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.39996337890625" minWidth="10.0" prefWidth="67.0000244140625" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.8000244140625" minWidth="10.0" prefWidth="88.5999755859375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="72.0000244140625" minWidth="10.0" prefWidth="45.00001220703126" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.00000000000003" minWidth="10.0" prefWidth="94.99996337890624" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="71.39996337890628" minWidth="10.0" prefWidth="41.999975585937534" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.00002441406252" minWidth="10.0" prefWidth="118.00002441406252" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                     
+                                         <!-- Fila 1 -->
+                                         <Label prefHeight="18.0" prefWidth="70.0" text="Fecha Nac." />
+                                         <DatePicker fx:id="dpFechaNacimiento" prefHeight="26.0" prefWidth="75.0" GridPane.columnIndex="1" />
+                     
+                                         <Label text="Sexo" GridPane.columnIndex="2" />
+                                         <ComboBox fx:id="cmbSexo" prefHeight="26.0" prefWidth="76.0" GridPane.columnIndex="3" />
+                     
+                                         <!-- Fila 2 -->
+                                         <Label text="DNI" GridPane.columnIndex="4" />
+                                         <TextField fx:id="txtDni" GridPane.columnIndex="5" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+                  <GridPane GridPane.rowIndex="1">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.20001220703125" minWidth="10.0" prefWidth="67.20001220703125" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="141.2000244140625" minWidth="10.0" prefWidth="136.3999755859375" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="100.4000244140625" minWidth="10.0" prefWidth="57.59998779296876" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.59998779296876" minWidth="10.0" prefWidth="148.00001220703126" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.39996337890625" minWidth="10.0" prefWidth="52.999975585937534" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.4000244140625" minWidth="10.0" prefWidth="131.4000244140625" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+         
+                             <Label text="NHC" GridPane.rowIndex="1" />
+                             <TextField fx:id="txtNhc" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         
+                             <!-- Fila 3 -->
+                             <Label text="NUHSA" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                             <TextField fx:id="txtNuhsa" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+         
+                             <Label text="NUSS" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                             <TextField fx:id="txtNuss" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+         
+                             <Label text="Provincia" />
+                             <TextField fx:id="txtProvincia" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" />
+         
+                             <!-- Fila 6 -->
+                             <Label text="C.P." GridPane.columnIndex="2" />
+                             <TextField fx:id="txtCp" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" />
+         
+                             <Label text="Email" GridPane.columnIndex="4" />
+                             <TextField fx:id="txtEmail" GridPane.columnIndex="5" />
+         
+                             <Label text="Aseguradora" GridPane.rowIndex="2" />
+                             <TextField fx:id="txtAseguradora" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         
+                             <!-- Fila 7 -->
+                             <Label text="Nº Póliza" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                             <TextField fx:id="txtPoliza" maxWidth="-Infinity" prefWidth="124.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+         
+                             <!-- Fila 4 -->
+                             <Label text="Teléfono" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                             <TextField fx:id="txtTelefono" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
+               </children>
+            </GridPane>
+
+            </HBox>
+
+            <!-- ===== DATOS CLÍNICOS ===== -->
+            <TabPane prefHeight="207.0" prefWidth="550.0" side="BOTTOM">
+                <Tab text="Antecedentes personales">
+                    <TextArea fx:id="txtAntPersonales" prefHeight="162.0" prefWidth="550.0" />
+                </Tab>
+                <Tab text="Antecedentes familiares">
+                    <TextArea fx:id="txtAntFamiliares" />
+                </Tab>
+                <Tab text="Tratamiento">
+                    <TextArea fx:id="txtTratamiento" />
+                </Tab>
+                <Tab text="Alergias">
+                    <TextArea fx:id="txtAlergias" />
+                </Tab>
+            </TabPane>
+
+            <!-- ===== BOTONERA ===== -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+
+                <!-- IZQUIERDA -->
+                <HBox spacing="10">
+                    <Button onAction="#guardarPaciente" style="-fx-text-fill: blue;" text="Grabar" />
+                    <Button onAction="#eliminarPaciente" style="-fx-text-fill: red;" text="Eliminar" />
+                    <Button fx:id="btnLimpiar" onAction="#limpiarFormulario" style="-fx-text-fill: green;" text="Limpiar" />
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- DERECHA -->
+                <HBox spacing="10">
+                    <Button text="Ver citas" />
+                    <Button text="Ver historial" />
+                    <Button text="Crear cita" />
+                </HBox>
+
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
