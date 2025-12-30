@@ -17,6 +17,7 @@ public class MedicoDashboardController {
         if (u != null) {
             lblUserInfo.setText("Bienvenido, " + u.getUsername() + " (MEDICO)");
         }
+
     }
 
     @FXML

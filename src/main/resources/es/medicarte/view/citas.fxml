@@ -26,7 +26,7 @@
 
             <Button text="Buscar" onAction="#buscarCitas"/>
             <Button text="Fechas" onAction="#filtrarPorFechas"/>
-            <Button text="Cancelar" onAction="#cancelar"/>
+            <Button text="Cancelar" onAction="#volver"/>
         </HBox>
     </top>
 
@@ -73,6 +73,7 @@
             <Label fx:id="lblPaciente" text="Paciente"/>
             <Label fx:id="lblFechaHora" text="Fecha y hora"/>
             <Label fx:id="lblObservaciones" text="Observaciones"/>
+            <Label fx:id="lblEstado" />
 
             <Separator/>
 

@@ -19,6 +19,9 @@ public class CitaDAO {
                     "WHERE id_paciente = ? " +
                     "ORDER BY fecha_hora";
 
+    private static final String SELECT_ALL_SQL =
+            "SELECT * FROM medicarte.cita ORDER BY fecha_hora";
+
     /**
      * Inserta una nueva cita
      */
@@ -87,5 +90,23 @@ public class CitaDAO {
         c.setDuracionMin(rs.getObject("duracion_min", Integer.class));
 
         return c;
+    }
+    public List<Cita> findAll() {
+
+        List<Cita> lista = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_ALL_SQL);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(mapResultSet(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
     }
 }

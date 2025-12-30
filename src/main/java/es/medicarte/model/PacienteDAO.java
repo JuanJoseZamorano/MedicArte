@@ -37,6 +37,9 @@ public class PacienteDAO {
 
     private static final String SELECT_BY_ID_SQL =
             "SELECT * FROM medicarte.paciente WHERE id_paciente = ?";
+
+    private static final String SELECT_BY_DNI_SQL =
+            "SELECT * FROM medicarte.paciente WHERE dni = ?";
     /**
      * Inserta un nuevo paciente en la base de datos
      */
@@ -298,6 +301,26 @@ public class PacienteDAO {
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID_SQL)) {
 
             ps.setInt(1, idPaciente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToPaciente(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Paciente findByDni(String dni) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_DNI_SQL)) {
+
+            ps.setString(1, dni);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
