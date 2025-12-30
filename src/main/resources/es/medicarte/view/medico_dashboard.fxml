@@ -18,7 +18,7 @@
     <center>
         <VBox spacing="10" alignment="CENTER">
             <Button text="Pacientes" onAction="#abrirPacientes"/>
-            <Button text="Citas" />
+            <Button text="Citas" onAction="#abrirCitas"/>
             <Button text="Agenda" />
         </VBox>
     </center>

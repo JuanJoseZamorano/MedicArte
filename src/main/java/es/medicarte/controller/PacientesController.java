@@ -147,6 +147,7 @@ public class PacientesController {
     private void guardarPaciente() {
 
         String dniIntroducido = txtDni.getText();
+        String nhcIntroducido = txtNhc.getText();
 
     /* =========================================================
        CASO INSERT (MODO ALTA)
@@ -161,7 +162,22 @@ public class PacientesController {
                 return;
             }
 
-            // 1. Creamos paciente SIN foto todavía
+            if (nhcIntroducido == null || nhcIntroducido.isBlank()) {
+                new Alert(
+                        Alert.AlertType.WARNING,
+                        "El NHC es obligatorio."
+                ).showAndWait();
+                return;
+            }
+
+            if (pacienteDAO.existsByNhc(nhcIntroducido)) {
+                new Alert(
+                        Alert.AlertType.WARNING,
+                        "Ya existe un paciente con ese NHC."
+                ).showAndWait();
+                return;
+            }
+
             Paciente p = new Paciente();
             rellenarPacienteDesdeFormulario(p);
             p.setFotoPath(null);
@@ -203,6 +219,8 @@ public class PacientesController {
        CASO UPDATE (MODO EDICIÓN)
        ========================================================= */
         String dniOriginal = pacienteSeleccionado.getDni();
+        String nhcOriginal = pacienteSeleccionado.getNhc();
+        String nhcNuevo = txtNhc.getText();
 
         if (!dniIntroducido.equals(dniOriginal)
                 && pacienteDAO.existsByDni(dniIntroducido)) {
@@ -210,6 +228,16 @@ public class PacientesController {
             new Alert(
                     Alert.AlertType.WARNING,
                     "No se puede modificar el DNI.\nYa existe otro paciente con ese DNI."
+            ).showAndWait();
+            return;
+        }
+
+        if (!nhcNuevo.equals(nhcOriginal)
+                && pacienteDAO.existsByNhc(nhcNuevo)) {
+
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "No se puede modificar el NHC.\nYa existe otro paciente con ese NHC."
             ).showAndWait();
             return;
         }
@@ -381,5 +409,24 @@ public class PacientesController {
         }
     }
 
+    @FXML
+    private void verCitas() {
+
+        if (pacienteSeleccionado == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar un paciente para ver sus citas"
+            ).showAndWait();
+            return;
+        }
+
+        SceneManager.loadScene(
+
+                "/es/medicarte/view/citas.fxml",
+                "MedicArte - Citas",
+                pacienteSeleccionado.getIdPaciente()
+        );
+
+    }
 
 }

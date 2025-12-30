@@ -154,7 +154,7 @@
 
                 <!-- DERECHA -->
                 <HBox spacing="10">
-                    <Button text="Ver citas"/>
+                    <Button text="Ver citas" onAction="#verCitas"/>
                     <Button text="Ver historial"/>
                     <Button text="Crear cita"/>
                 </HBox>

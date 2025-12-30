@@ -26,4 +26,12 @@ public class MedicoDashboardController {
                 "MedicArte - Pacientes"
         );
     }
+
+    @FXML
+    private void abrirCitas() {
+        SceneManager.loadScene(
+                "/es/medicarte/view/citas.fxml",
+                "MedicArte - Citas"
+        );
+    }
 }

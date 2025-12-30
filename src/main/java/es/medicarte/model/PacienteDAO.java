@@ -31,6 +31,12 @@ public class PacienteDAO {
 
     private static final String DELETE_SQL =
             "DELETE FROM medicarte.paciente WHERE id_paciente=?";
+
+    private static final String EXISTS_NHC_SQL =
+            "SELECT COUNT(*) FROM medicarte.paciente WHERE nhc = ?";
+
+    private static final String SELECT_BY_ID_SQL =
+            "SELECT * FROM medicarte.paciente WHERE id_paciente = ?";
     /**
      * Inserta un nuevo paciente en la base de datos
      */
@@ -205,6 +211,26 @@ public class PacienteDAO {
         return false;
     }
 
+    public boolean existsByNhc(String nhc) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(EXISTS_NHC_SQL)) {
+
+            ps.setString(1, nhc);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public boolean delete(int idPaciente) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -264,6 +290,26 @@ public class PacienteDAO {
         }
 
         return resultado;
+    }
+
+    public Paciente findById(int idPaciente) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID_SQL)) {
+
+            ps.setInt(1, idPaciente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToPaciente(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

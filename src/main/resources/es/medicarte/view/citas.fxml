@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="es.medicarte.controller.CitasController">
+
+    <!-- ================= BUSCADOR SUPERIOR ================= -->
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Apellidos"/>
+            <TextField fx:id="txtBuscarApellidos"/>
+
+            <Label text="Nombre"/>
+            <TextField fx:id="txtBuscarNombre"/>
+
+            <Label text="DNI"/>
+            <TextField fx:id="txtBuscarDni"/>
+
+            <Button text="Buscar" onAction="#buscarCitas"/>
+            <Button text="Fechas" onAction="#filtrarPorFechas"/>
+            <Button text="Cancelar" onAction="#cancelar"/>
+        </HBox>
+    </top>
+
+    <!-- ================= ZONA IZQUIERDA ================= -->
+    <left>
+        <VBox spacing="10" prefWidth="260">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <!-- Calendario -->
+            <DatePicker fx:id="datePickerAgenda"/>
+
+            <!-- APP MÓVIL (SOLO PINTADO) -->
+            <TitledPane text="Citas solicitadas por APP" expanded="false">
+                <ListView fx:id="listCitasApp"/>
+            </TitledPane>
+        </VBox>
+    </left>
+
+    <!-- ================= LISTADO CENTRAL ================= -->
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Citas" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+            <!-- Listado principal de citas -->
+            <ListView fx:id="listCitas"/>
+        </VBox>
+    </center>
+
+    <!-- ================= DETALLE DERECHA ================= -->
+    <right>
+        <VBox spacing="15" prefWidth="260">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Detalle de la cita" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+            <Label fx:id="lblPaciente" text="Paciente"/>
+            <Label fx:id="lblFechaHora" text="Fecha y hora"/>
+            <Label fx:id="lblObservaciones" text="Observaciones"/>
+
+            <Separator/>
+
+            <Button text="Editar" onAction="#editarCita"/>
+            <Button text="Cancelar Cita" onAction="#cancelarCita"/>
+            <Button text="Pasar a Consulta" onAction="#pasarConsulta"/>
+
+            <Separator/>
+
+            <Button text="Abrir Historial" onAction="#abrirHistorial"/>
+            <Button text="Ver Paciente" onAction="#verPaciente"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button text="+ AGENDAR NUEVA CITA"
+                    style="-fx-text-fill: green; -fx-font-weight: bold;"
+                    onAction="#nuevaCita"/>
+        </VBox>
+    </right>
+
+</BorderPane>
+
