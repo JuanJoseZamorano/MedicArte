@@ -11,7 +11,7 @@ public class UsuarioDAO {
     public Usuario findByUsername(String username) {
 
         String sql = """
-            SELECT id_usuario, username, password_hash, rol, activo
+            SELECT id_usuario, username, password_hash, rol, activo, id_medico
             FROM medicarte.usuario
             WHERE username = ?
         """;
@@ -29,6 +29,7 @@ public class UsuarioDAO {
                     u.setPasswordHash(rs.getString("password_hash"));
                     u.setRol(rs.getString("rol"));
                     u.setActivo(rs.getBoolean("activo"));
+                    u.setIdMedico(rs.getObject("id_medico", Integer.class));
                     return u;
                 }
             }

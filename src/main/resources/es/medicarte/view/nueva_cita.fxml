@@ -221,8 +221,9 @@
             <!-- ===== BOTÓN GUARDAR ===== -->
             <HBox alignment="CENTER_RIGHT">
                 <Button text="+ GUARDAR CITA"
-                        style="-fx-text-fill: green; -fx-font-weight: bold;"/>
-<!--                        onAction="#guardarCita"-->
+                        style="-fx-text-fill: green; -fx-font-weight: bold;"
+                        onAction="#guardarCita"/>
+
 
             </HBox>
 

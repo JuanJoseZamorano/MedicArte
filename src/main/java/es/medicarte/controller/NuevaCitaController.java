@@ -1,11 +1,14 @@
 package es.medicarte.controller;
 
-import es.medicarte.model.Paciente;
-import es.medicarte.model.PacienteDAO;
+import es.medicarte.model.*;
 import es.medicarte.util.SceneManager;
+import es.medicarte.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class NuevaCitaController {
 
@@ -173,12 +176,71 @@ public class NuevaCitaController {
 
 
 
-    @FXML
-    private void guardarCita() {
-        // Se implementará más adelante
-    }
+
     @FXML
     private void volver() {
+        SceneManager.loadScene(
+                "/es/medicarte/view/citas.fxml",
+                "MedicArte - Citas"
+        );
+    }
+
+    @FXML
+    private void guardarCita() {
+
+        if (pacienteSeleccionado == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe seleccionar un paciente antes de guardar la cita.")
+                    .showAndWait();
+            return;
+        }
+
+        if (dpFechaCita.getValue() == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe seleccionar una fecha para la cita.")
+                    .showAndWait();
+            return;
+        }
+
+        Integer hora = spHora.getValue();
+        if (hora == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe seleccionar una hora para la cita.")
+                    .showAndWait();
+            return;
+        }
+
+        Usuario usuario = UserSession.getUsuario();
+        if (usuario == null || usuario.getIdMedico() == null) {
+            new Alert(Alert.AlertType.ERROR,
+                    "No se ha podido identificar al médico logueado.")
+                    .showAndWait();
+            return;
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.of(
+                dpFechaCita.getValue(),
+                LocalTime.of(hora, 0)
+        );
+
+        Cita cita = new Cita();
+        cita.setIdPaciente(pacienteSeleccionado.getIdPaciente());
+        cita.setIdMedico(usuario.getIdMedico());
+        cita.setFechaHora(fechaHora);
+        cita.setEstado("PENDIENTE");
+        cita.setOrigen("CLINICA");
+        cita.setObservaciones(txtObservaciones.getText());
+
+        CitaDAO citaDAO = new CitaDAO();
+        boolean ok = citaDAO.insert(cita);
+
+        if (!ok) {
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudo guardar la cita.")
+                    .showAndWait();
+            return;
+        }
+
         SceneManager.loadScene(
                 "/es/medicarte/view/citas.fxml",
                 "MedicArte - Citas"

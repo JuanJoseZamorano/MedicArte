@@ -8,6 +8,9 @@ public class Usuario {
     private String rol;
     private boolean activo;
 
+    // añadimos la variable necesaria de idmedico
+    private Integer idMedico;
+
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -46,5 +49,13 @@ public class Usuario {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    public Integer getIdMedico() {
+        return idMedico;
+    }
+
+    public void setIdMedico(Integer idMedico) {
+        this.idMedico = idMedico;
     }
 }
