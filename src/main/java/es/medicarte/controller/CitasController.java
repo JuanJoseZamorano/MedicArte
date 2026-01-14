@@ -4,14 +4,11 @@ import es.medicarte.util.SceneManager;
 import javafx.fxml.FXML;
 import es.medicarte.model.Paciente;
 import es.medicarte.model.PacienteDAO;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import es.medicarte.model.Cita;
 import es.medicarte.model.CitaDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import es.medicarte.model.Cita;
 import es.medicarte.model.CitaDAO;
@@ -110,6 +107,11 @@ public class CitasController {
                                     (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo") +
                                     " (" + c.getEstado() + ")"
                     );
+                    if ("CANCELADA".equals(c.getEstado())) {
+                        setStyle("-fx-text-fill: red;");
+                    } else {
+                        setStyle("");
+                    }
                 }
             }
         });
@@ -173,10 +175,6 @@ public class CitasController {
         // Se implementará más adelante
     }
 
-    @FXML
-    private void cancelarCita() {
-        // Se implementará más adelante
-    }
 
     @FXML
     private void pasarConsulta() {
@@ -200,6 +198,66 @@ public class CitasController {
                 "MedicArte - Nueva cita"
         );
     }
+
+    @FXML
+    private void cancelarCita() {
+
+        if (citaSeleccionada == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar una cita para cancelarla."
+            ).showAndWait();
+            return;
+        }
+
+        if ("CANCELADA".equals(citaSeleccionada.getEstado())) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "La cita ya está cancelada."
+            ).showAndWait();
+            return;
+        }
+
+        Alert confirmacion = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "¿Está seguro de que desea cancelar la cita?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+
+        confirmacion.showAndWait();
+
+        if (confirmacion.getResult() != ButtonType.YES) {
+            return;
+        }
+
+        CitaDAO dao = new CitaDAO();
+        boolean ok = dao.cancelarCita(citaSeleccionada.getIdCita());
+
+        if (!ok) {
+            new Alert(
+                    Alert.AlertType.ERROR,
+                    "No se pudo cancelar la cita."
+            ).showAndWait();
+            return;
+        }
+
+        // Actualizamos estado local
+        citaSeleccionada.setEstado("CANCELADA");
+
+        // Refrescamos la agenda
+        if (idPacienteFiltro != null) {
+            cargarCitasPorPaciente(idPacienteFiltro);
+        } else {
+            cargarTodasLasCitas();
+        }
+
+        new Alert(
+                Alert.AlertType.INFORMATION,
+                "La cita ha sido cancelada correctamente."
+        ).showAndWait();
+    }
+
 
     @FXML
     private void volver() {

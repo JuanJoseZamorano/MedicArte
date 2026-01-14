@@ -22,6 +22,9 @@ public class CitaDAO {
     private static final String SELECT_ALL_SQL =
             "SELECT * FROM medicarte.cita ORDER BY fecha_hora";
 
+    private static final String CANCELAR_CITA_SQL =
+            "UPDATE medicarte.cita SET estado = 'CANCELADA' WHERE id_cita = ?";
+
     /**
      * Inserta una nueva cita
      */
@@ -108,5 +111,21 @@ public class CitaDAO {
         }
 
         return lista;
+    }
+    /**
+     * Se marca cita como cancelada
+     */
+    public boolean cancelarCita(int idCita) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CANCELAR_CITA_SQL)) {
+
+            ps.setInt(1, idCita);
+            return ps.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

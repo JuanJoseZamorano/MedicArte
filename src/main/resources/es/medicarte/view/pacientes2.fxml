@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="585.0" prefWidth="831.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.medicarte.controller.PacientesController">
+<BorderPane prefHeight="585.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.medicarte.controller.PacientesController">
 
     <!-- ================= BÚSQUEDA ================= -->
     <top>
@@ -46,7 +46,7 @@
 
     <!-- ================= LISTADO ================= -->
     <left>
-        <VBox prefHeight="508.0" prefWidth="216.0" spacing="5">
+        <VBox prefHeight="508.0" prefWidth="277.0" spacing="5">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
