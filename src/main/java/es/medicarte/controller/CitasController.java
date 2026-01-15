@@ -178,7 +178,27 @@ public class CitasController {
 
     @FXML
     private void pasarConsulta() {
-        // Se implementará más adelante
+        if (citaSeleccionada == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar una cita para pasar a consulta."
+            ).showAndWait();
+            return;
+        }
+
+        if (!"PENDIENTE".equals(citaSeleccionada.getEstado())) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "Solo se pueden pasar a consulta citas en estado PENDIENTE."
+            ).showAndWait();
+            return;
+        }
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/consulta.fxml",
+                "MedicArte - Consulta",
+                citaSeleccionada
+        );
     }
 
     @FXML
