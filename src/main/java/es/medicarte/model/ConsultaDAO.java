@@ -14,6 +14,11 @@ public class ConsultaDAO {
                     "WHERE id_episodio = ? " +
                     "ORDER BY fecha_hora ASC";
 
+    private static final String INSERT_CONSULTA =
+            "INSERT INTO medicarte.consulta " +
+                    "(id_episodio, id_medico, id_cita, fecha_hora, motivo_consulta, anamnesis, exploracion, diagnostico, tratamiento, observaciones, estado) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     public List<Consulta> findByEpisodio(int idEpisodio) {
 
         List<Consulta> lista = new ArrayList<>();
@@ -61,4 +66,29 @@ public class ConsultaDAO {
 
         return c;
     }
+    public boolean insert(Consulta c) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_CONSULTA)) {
+
+            ps.setInt(1, c.getIdEpisodio());
+            ps.setInt(2, c.getIdMedico());
+            ps.setInt(3, c.getIdCita());
+            ps.setTimestamp(4, Timestamp.valueOf(c.getFechaHora()));
+            ps.setString(5, c.getMotivoConsulta());
+            ps.setString(6, c.getAnamnesis());
+            ps.setString(7, c.getExploracion());
+            ps.setString(8, c.getDiagnostico());
+            ps.setString(9, c.getTratamiento());
+            ps.setString(10, c.getObservaciones());
+            ps.setString(11, c.getEstado());
+
+            return ps.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

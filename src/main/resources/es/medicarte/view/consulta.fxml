@@ -27,6 +27,8 @@
                 <Label fx:id="lblEdadSexo" text="Edad / Sexo" />
                 <Label fx:id="lblFechaHora" text="Fecha / Hora" />
                 <Label fx:id="lblEspecialidad" text="Especialidad" />
+                <ComboBox fx:id="cmbEspecialidad"
+                          prefWidth="150"/>
                 <Label fx:id="lblEpisodio" text="Episodio" />
                 <ComboBox fx:id="cmbEpisodio" prefWidth="150.0" />
             </HBox>

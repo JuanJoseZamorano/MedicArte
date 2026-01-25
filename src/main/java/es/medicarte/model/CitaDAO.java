@@ -25,6 +25,9 @@ public class CitaDAO {
     private static final String CANCELAR_CITA_SQL =
             "UPDATE medicarte.cita SET estado = 'CANCELADA' WHERE id_cita = ?";
 
+    private static final String COMPLETAR_CITA =
+            "UPDATE medicarte.cita SET estado = 'COMPLETADA' WHERE id_cita = ?";
+
     /**
      * Inserta una nueva cita
      */
@@ -119,6 +122,19 @@ public class CitaDAO {
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(CANCELAR_CITA_SQL)) {
+
+            ps.setInt(1, idCita);
+            return ps.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean completarCita(int idCita) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(COMPLETAR_CITA)) {
 
             ps.setInt(1, idCita);
             return ps.executeUpdate() == 1;

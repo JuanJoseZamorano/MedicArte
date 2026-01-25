@@ -15,6 +15,34 @@ public class EpisodioDAO {
                     "WHERE h.id_paciente = ? " +
                     "ORDER BY e.fecha_inicio DESC";
 
+    private static final String INSERT_EPISODIO =
+            "INSERT INTO medicarte.episodio " +
+                    "(id_historia, id_especialidad, motivo, estado) " +
+                    "VALUES (?, ?, ?, 'ABIERTO') " +
+                    "RETURNING id_episodio";
+
+    public int insertar(Episodio e) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_EPISODIO)) {
+
+            ps.setInt(1, e.getIdHistoria());
+            ps.setInt(2, e.getIdEspecialidad());
+            ps.setString(3, e.getMotivo());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return -1;
+    }
+
     public List<Episodio> findByPaciente(int idPaciente) {
 
         List<Episodio> lista = new ArrayList<>();

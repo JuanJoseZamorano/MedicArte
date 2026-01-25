@@ -2,11 +2,13 @@ package es.medicarte.controller;
 
 import es.medicarte.model.*;
 import es.medicarte.util.SceneManager;
+import es.medicarte.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
+
 
 import java.util.List;
 
@@ -39,13 +41,15 @@ public class ConsultaController {
     @FXML private TextArea txtDiagnostico;
     @FXML private TextArea txtTratamiento;
     @FXML private TextArea txtObservaciones;
-
+    @FXML private ComboBox<Especialidad> cmbEspecialidad;
     // =========================
     // ESTADO
     // =========================
     private Cita citaActual;
     private Paciente pacienteActual;
     private Episodio episodioSeleccionado;
+
+
 
     // =========================
     // DAOs
@@ -57,10 +61,13 @@ public class ConsultaController {
     // =========================
     // INITIALIZE
     // =========================
+    private final EspecialidadDAO especialidadDAO = new EspecialidadDAO();
     @FXML
     private void initialize() {
 
+        // =========================
         // Listado de consultas previas (solo lectura)
+        // =========================
         listConsultasPrevias.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Consulta c, boolean empty) {
@@ -80,12 +87,28 @@ public class ConsultaController {
             }
         });
 
+        // =========================
         // Listener de cambio de episodio
+        // =========================
         cmbEpisodio.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, oldVal, newVal) ->
                         onEpisodioSeleccionado(newVal));
+
+        // =========================
+        // ComboBox de especialidades
+        // =========================
+        cmbEspecialidad.setItems(
+                FXCollections.observableArrayList(
+                        especialidadDAO.findAll()
+                )
+        );
+
+        // Por defecto, deshabilitado
+        cmbEspecialidad.setDisable(true);
+        cmbEspecialidad.setValue(null);
     }
+
 
     // =========================
     // ENTRADA DESDE CITAS
@@ -186,10 +209,22 @@ public class ConsultaController {
 
         if (episodio == null) {
             // Nuevo episodio
-            lblEspecialidad.setText("Seleccione especialidad");
+            lblEspecialidad.setText("Nueva especialidad");
+            cmbEspecialidad.setDisable(false);
+            cmbEspecialidad.setValue(null);
             listConsultasPrevias.getItems().clear();
             limpiarConsultaActual();
-            return;
+        } else {
+            // Episodio existente
+            lblEspecialidad.setText("Especialidad");
+            cmbEspecialidad.setDisable(true);
+
+            Especialidad esp = especialidadDAO.findById(
+                    episodio.getIdEspecialidad()
+            );
+            cmbEspecialidad.setValue(esp);
+
+            cargarConsultasPrevias(episodio.getIdEpisodio());
         }
 
         // Episodio existente
@@ -247,7 +282,128 @@ public class ConsultaController {
 
     @FXML
     private void grabarConsulta() {
-        // Se implementará en el siguiente paso
-        // Aquí se creará la consulta y, si procede, el episodio
+
+        // =========================
+        // VALIDACIONES BÁSICAS
+        // =========================
+        if (citaActual == null || pacienteActual == null) {
+            new Alert(Alert.AlertType.ERROR,
+                    "No hay contexto de cita o paciente.")
+                    .showAndWait();
+            return;
+        }
+
+        if (txtMotivoConsulta.getText() == null || txtMotivoConsulta.getText().isBlank()) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe indicar el motivo de la consulta.")
+                    .showAndWait();
+            return;
+        }
+
+        Usuario usuario = UserSession.getUsuario();
+        if (usuario == null || usuario.getIdMedico() == null) {
+            new Alert(Alert.AlertType.ERROR,
+                    "No se ha podido identificar al médico logueado.")
+                    .showAndWait();
+            return;
+        }
+
+        int idMedico = usuario.getIdMedico();
+        int idEpisodio;
+
+        // =========================
+        // OBTENER O CREAR EPISODIO
+        // =========================
+        if (episodioSeleccionado != null) {
+
+            // Episodio existente
+            idEpisodio = episodioSeleccionado.getIdEpisodio();
+
+        } else {
+
+            // Crear nuevo episodio
+            HistoriaDAO historiaDAO = new HistoriaDAO();
+            HistoriaClinica historia = historiaDAO.findOrCreateByPaciente(
+                    pacienteActual.getIdPaciente()
+            );
+
+            Episodio nuevoEpisodio = new Episodio();
+            nuevoEpisodio.setIdHistoria(historia.getIdHistoria());
+            nuevoEpisodio.setIdEspecialidad(
+                    obtenerEspecialidadSeleccionada()
+            );
+            nuevoEpisodio.setMotivo(txtMotivoConsulta.getText());
+            nuevoEpisodio.setEstado("ABIERTO");
+
+            int nuevoId = episodioDAO.insertar(nuevoEpisodio);
+
+            if (nuevoId <= 0) {
+                new Alert(Alert.AlertType.ERROR,
+                        "No se pudo crear el episodio clínico.")
+                        .showAndWait();
+                return;
+            }
+
+            idEpisodio = nuevoId;
+        }
+
+        // =========================
+        // CREAR CONSULTA
+        // =========================
+        Consulta consulta = new Consulta();
+        consulta.setIdEpisodio(idEpisodio);
+        consulta.setIdMedico(idMedico);
+        consulta.setIdCita(citaActual.getIdCita());
+        consulta.setFechaHora(citaActual.getFechaHora());
+        consulta.setMotivoConsulta(txtMotivoConsulta.getText());
+        consulta.setAnamnesis(txtAnamnesis.getText());
+        consulta.setExploracion(txtExploracion.getText());
+        consulta.setDiagnostico(txtDiagnostico.getText());
+        consulta.setTratamiento(txtTratamiento.getText());
+        consulta.setObservaciones(txtObservaciones.getText());
+        consulta.setEstado("FINALIZADA");
+
+        boolean insertada = consultaDAO.insert(consulta);
+
+        if (!insertada) {
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudo guardar la consulta.")
+                    .showAndWait();
+            return;
+        }
+
+        // =========================
+        // MARCAR CITA COMO COMPLETADA
+        // =========================
+        CitaDAO citaDAO = new CitaDAO();
+        boolean completada = citaDAO.completarCita(
+                citaActual.getIdCita()
+        );
+
+        if (!completada) {
+            new Alert(Alert.AlertType.WARNING,
+                    "La consulta se guardó, pero no se pudo marcar la cita como completada.")
+                    .showAndWait();
+        }
+
+        // =========================
+        // VOLVER A AGENDA
+        // =========================
+        SceneManager.loadScene(
+                "/es/medicarte/view/citas.fxml",
+                "MedicArte - Citas"
+        );
+    }
+    private int obtenerEspecialidadSeleccionada() {
+
+        Especialidad esp = cmbEspecialidad.getValue();
+
+        if (esp == null) {
+            throw new IllegalStateException(
+                    "Debe seleccionar una especialidad para el nuevo episodio."
+            );
+        }
+
+        return esp.getIdEspecialidad();
     }
 }
