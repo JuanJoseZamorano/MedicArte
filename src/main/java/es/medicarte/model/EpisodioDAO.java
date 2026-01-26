@@ -32,7 +32,7 @@ public class EpisodioDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1);
+                    return rs.getInt("id_episodio");
                 }
             }
 

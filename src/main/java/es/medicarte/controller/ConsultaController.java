@@ -49,7 +49,10 @@ public class ConsultaController {
     private Paciente pacienteActual;
     private Episodio episodioSeleccionado;
 
-
+    private final Episodio EPISODIO_NUEVO = new Episodio() {{
+        setMotivo("Nuevo episodio…");
+        setEstado("");
+    }};
 
     // =========================
     // DAOs
@@ -181,14 +184,15 @@ public class ConsultaController {
                 FXCollections.observableArrayList();
 
         items.addAll(episodios);
-        items.add(null); // + Nuevo episodio…
-
+        // con esto no em disparaba el listener
+        // items.add(null); // + Nuevo episodio…
+        items.add(EPISODIO_NUEVO);
         cmbEpisodio.setItems(items);
 
         cmbEpisodio.setConverter(new StringConverter<>() {
             @Override
             public String toString(Episodio e) {
-                if (e == null) {
+                if (e == EPISODIO_NUEVO) {
                     return "+ Nuevo episodio…";
                 }
                 return e.getMotivo() + " (" + e.getEstado() + ")";
@@ -200,14 +204,14 @@ public class ConsultaController {
             }
         });
 
-        cmbEpisodio.getSelectionModel().select(null);
+        cmbEpisodio.getSelectionModel().select(EPISODIO_NUEVO);
     }
 
     private void onEpisodioSeleccionado(Episodio episodio) {
 
         episodioSeleccionado = episodio;
 
-        if (episodio == null) {
+        if (episodio == EPISODIO_NUEVO) {
             // Nuevo episodio
             lblEspecialidad.setText("Nueva especialidad");
             cmbEspecialidad.setDisable(false);
@@ -216,7 +220,7 @@ public class ConsultaController {
             limpiarConsultaActual();
         } else {
             // Episodio existente
-            lblEspecialidad.setText("Especialidad");
+            lblEspecialidad.setText("Especialidad sel");
             cmbEspecialidad.setDisable(true);
 
             Especialidad esp = especialidadDAO.findById(
@@ -314,7 +318,7 @@ public class ConsultaController {
         // =========================
         // OBTENER O CREAR EPISODIO
         // =========================
-        if (episodioSeleccionado != null) {
+        if (episodioSeleccionado != null && episodioSeleccionado != EPISODIO_NUEVO) {
 
             // Episodio existente
             idEpisodio = episodioSeleccionado.getIdEpisodio();
