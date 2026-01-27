@@ -42,6 +42,7 @@ public class ConsultaController {
     @FXML private TextArea txtTratamiento;
     @FXML private TextArea txtObservaciones;
     @FXML private ComboBox<Especialidad> cmbEspecialidad;
+    @FXML private Button btnGrabarConsulta;
     // =========================
     // ESTADO
     // =========================
@@ -68,6 +69,7 @@ public class ConsultaController {
     @FXML
     private void initialize() {
 
+        btnGrabarConsulta.setDisable(true);
         // =========================
         // Listado de consultas previas (solo lectura)
         // =========================
@@ -98,6 +100,15 @@ public class ConsultaController {
                 .addListener((obs, oldVal, newVal) ->
                         onEpisodioSeleccionado(newVal));
 
+
+        cmbEspecialidad.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((obs, oldEsp, newEsp) -> {
+                    if (newEsp != null) {
+                        lblEspecialidad.setText("Especialidad: " + newEsp.getNombre());
+                    }
+                    actualizarEstadoBotonGrabar();
+                });
         // =========================
         // ComboBox de especialidades
         // =========================
@@ -110,6 +121,10 @@ public class ConsultaController {
         // Por defecto, deshabilitado
         cmbEspecialidad.setDisable(true);
         cmbEspecialidad.setValue(null);
+
+        txtMotivoConsulta.textProperty()
+                .addListener((obs, oldVal, newVal) ->
+                        actualizarEstadoBotonGrabar());
     }
 
 
@@ -213,34 +228,34 @@ public class ConsultaController {
 
         if (episodio == EPISODIO_NUEVO) {
             // Nuevo episodio
-            lblEspecialidad.setText("Nueva especialidad");
+            lblEspecialidad.setText("Especialidad:");
             cmbEspecialidad.setDisable(false);
             cmbEspecialidad.setValue(null);
+            cmbEspecialidad.setVisible(true);
             listConsultasPrevias.getItems().clear();
             limpiarConsultaActual();
         } else {
             // Episodio existente
-            lblEspecialidad.setText("Especialidad sel");
             cmbEspecialidad.setDisable(true);
+            //cmbEspecialidad.setVisible(false);
+
 
             Especialidad esp = especialidadDAO.findById(
                     episodio.getIdEspecialidad()
             );
             cmbEspecialidad.setValue(esp);
 
+            if (esp != null) {
+                lblEspecialidad.setText("Especialidad: " + esp.getNombre());
+            } else {
+                lblEspecialidad.setText("Especialidad:");
+            }
+
             cargarConsultasPrevias(episodio.getIdEpisodio());
         }
-
-        // Episodio existente
-        lblEspecialidad.setText(
-                "Especialidad ID: " +
-                        episodio.getIdEspecialidad()
-        );
-
-        cargarConsultasPrevias(
-                episodio.getIdEpisodio()
-        );
+        actualizarEstadoBotonGrabar();
     }
+
 
     // =========================
     // CONSULTAS PREVIAS
@@ -390,6 +405,12 @@ public class ConsultaController {
                     .showAndWait();
         }
 
+        Alert ok = new Alert(
+                Alert.AlertType.INFORMATION,
+                "La consulta se ha registrado correctamente."
+        );
+        ok.setHeaderText(null);
+        ok.showAndWait();
         // =========================
         // VOLVER A AGENDA
         // =========================
@@ -410,4 +431,26 @@ public class ConsultaController {
 
         return esp.getIdEspecialidad();
     }
+
+    private void actualizarEstadoBotonGrabar() {
+
+        boolean motivoValido =
+                txtMotivoConsulta.getText() != null &&
+                        !txtMotivoConsulta.getText().isBlank();
+
+        boolean episodioValido;
+
+        if (episodioSeleccionado == EPISODIO_NUEVO) {
+            // Nuevo episodio → debe haber especialidad
+            episodioValido = cmbEspecialidad.getValue() != null;
+        } else {
+            // Episodio existente
+            episodioValido = episodioSeleccionado != null;
+        }
+
+        btnGrabarConsulta.setDisable(
+                !(motivoValido && episodioValido)
+        );
+    }
+
 }

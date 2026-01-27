@@ -117,7 +117,10 @@
 
             <Button onAction="#cancelar" text="Cancelar" />
             <Button onAction="#limpiarConsulta" text="Limpiar consulta" />
-            <Button onAction="#grabarConsulta" style="-fx-text-fill: green; -fx-font-weight: bold;" text="Grabar consulta" />
+            <Button fx:id="btnGrabarConsulta"
+                    text="Grabar consulta"
+                    style="-fx-text-fill: green; -fx-font-weight: bold;"
+                    onAction="#grabarConsulta"/>
         </HBox>
     </bottom>
 
