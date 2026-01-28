@@ -1,7 +1,9 @@
 package es.medicarte.util;
 
 import es.medicarte.controller.ConsultaController;
+import es.medicarte.controller.HistorialController;
 import es.medicarte.model.Cita;
+import es.medicarte.model.Paciente;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -83,4 +85,25 @@ public class SceneManager {
             e.printStackTrace();
         }
     }
+
+    public static void loadScene(String fxml, String title, Paciente paciente) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxml));
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof HistorialController) {
+                ((HistorialController) controller).setPaciente(paciente);
+            }
+
+            stage.setTitle(title);
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

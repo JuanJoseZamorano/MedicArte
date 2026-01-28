@@ -1,4 +1,6 @@
 package es.medicarte.model;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Episodio {
 
@@ -7,11 +9,20 @@ public class Episodio {
     private int idEspecialidad;
     private String motivo;
     private String estado;
+    private LocalDate fechaInicio;
 
     // ===== GETTERS & SETTERS =====
 
     public int getIdEpisodio() {
         return idEpisodio;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
     public void setIdEpisodio(int idEpisodio) {

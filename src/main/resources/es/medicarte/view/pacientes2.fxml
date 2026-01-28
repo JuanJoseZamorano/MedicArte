@@ -252,7 +252,7 @@
                 <!-- DERECHA -->
                 <HBox spacing="10">
                     <Button text="Ver citas" onAction="#verCitas"/>
-                    <Button text="Ver historial" />
+                    <Button text="Ver historial" onAction="#verHistorial"/>
                     <Button text="Crear cita" />
                 </HBox>
 

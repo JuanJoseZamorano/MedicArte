@@ -428,5 +428,22 @@ public class PacientesController {
         );
 
     }
+    @FXML
+    private void verHistorial() {
+
+        if (pacienteSeleccionado == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar un paciente."
+            ).showAndWait();
+            return;
+        }
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/historial.fxml",
+                "MedicArte - Historial Clínico",
+                pacienteSeleccionado
+        );
+    }
 
 }

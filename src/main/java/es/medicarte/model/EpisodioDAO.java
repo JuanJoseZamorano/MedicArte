@@ -60,6 +60,7 @@ public class EpisodioDAO {
                     e.setIdEspecialidad(rs.getInt("id_especialidad"));
                     e.setMotivo(rs.getString("motivo"));
                     e.setEstado(rs.getString("estado"));
+                    e.setFechaInicio(rs.getDate("fecha_inicio").toLocalDate());
                     lista.add(e);
                 }
             }
