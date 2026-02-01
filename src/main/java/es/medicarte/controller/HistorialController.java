@@ -234,16 +234,18 @@ public class HistorialController {
 
         if (seleccionada == null) {
             new Alert(Alert.AlertType.WARNING,
-                    "Debe seleccionar una consulta.").showAndWait();
+                    "Debe seleccionar una consulta.")
+                    .showAndWait();
             return;
         }
 
         SceneManager.loadScene(
                 "/es/medicarte/view/consulta.fxml",
                 "Consulta (solo lectura)",
-                seleccionada.getIdCita() // luego la abriremos en modo lectura
+                seleccionada
         );
     }
+
 
     @FXML
     private void imprimir() {

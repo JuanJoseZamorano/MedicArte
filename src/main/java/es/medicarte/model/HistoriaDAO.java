@@ -66,4 +66,34 @@ public class HistoriaDAO {
 
         return null;
     }
+    public HistoriaClinica findById(int idHistoria) {
+
+        String sql = "SELECT * FROM medicarte.historia_clinica WHERE id_historia = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idHistoria);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    HistoriaClinica h = new HistoriaClinica();
+                    h.setIdHistoria(rs.getInt("id_historia"));
+                    h.setIdPaciente(rs.getInt("id_paciente"));
+                    h.setEstado(rs.getString("estado"));
+                    h.setFechaApertura(
+                            rs.getDate("fecha_apertura").toLocalDate()
+                    );
+                    h.setNotas(rs.getString("notas"));
+                    return h;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

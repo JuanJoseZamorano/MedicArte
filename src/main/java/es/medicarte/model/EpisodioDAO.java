@@ -71,4 +71,39 @@ public class EpisodioDAO {
 
         return lista;
     }
+    public Episodio findById(int idEpisodio) {
+
+        String sql = "SELECT * FROM medicarte.episodio WHERE id_episodio = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEpisodio);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Episodio e = new Episodio();
+                    e.setIdEpisodio(rs.getInt("id_episodio"));
+                    e.setIdHistoria(rs.getInt("id_historia"));
+                    e.setIdEspecialidad(rs.getInt("id_especialidad"));
+                    e.setMotivo(rs.getString("motivo"));
+                    e.setEstado(rs.getString("estado"));
+
+                    if (rs.getDate("fecha_inicio") != null) {
+                        e.setFechaInicio(
+                                rs.getDate("fecha_inicio").toLocalDate()
+                        );
+                    }
+
+                    return e;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

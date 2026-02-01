@@ -43,6 +43,7 @@ public class ConsultaController {
     @FXML private TextArea txtObservaciones;
     @FXML private ComboBox<Especialidad> cmbEspecialidad;
     @FXML private Button btnGrabarConsulta;
+
     // =========================
     // ESTADO
     // =========================
@@ -66,6 +67,7 @@ public class ConsultaController {
     // INITIALIZE
     // =========================
     private final EspecialidadDAO especialidadDAO = new EspecialidadDAO();
+    private boolean soloLectura = false;
     @FXML
     private void initialize() {
 
@@ -158,9 +160,15 @@ public class ConsultaController {
                         pacienteActual.getSexo()
         );
 
-        lblFechaHora.setText(
-                citaActual.getFechaHora().toString()
-        );
+        if (citaActual != null) {
+            // Modo edición (desde citas)
+            lblFechaHora.setText(
+                    citaActual.getFechaHora().toString()
+            );
+        } else {
+            // Modo solo lectura (desde historial)
+            lblFechaHora.setText("Consulta histórica");
+        }
     }
 
     // =========================
@@ -452,5 +460,55 @@ public class ConsultaController {
                 !(motivoValido && episodioValido)
         );
     }
+    public void setConsultaSoloLectura(Consulta consulta) {
+        this.soloLectura = true;
+        cargarConsulta(consulta);
+        deshabilitarEdicionConsulta();
+    }
+
+    private void cargarConsulta(Consulta consulta) {
+
+        this.citaActual = null; // no se edita
+        this.episodioSeleccionado = episodioDAO.findById(consulta.getIdEpisodio());
+        HistoriaDAO historiaDAO = new HistoriaDAO();
+        HistoriaClinica historia =
+                historiaDAO.findById(episodioSeleccionado.getIdHistoria());
+
+        pacienteActual = pacienteDAO.findById(
+                historia.getIdPaciente()
+        );
+
+        cargarCabecera();
+        cargarDatosPaciente();
+
+        txtMotivoConsulta.setText(consulta.getMotivoConsulta());
+        txtAnamnesis.setText(consulta.getAnamnesis());
+        txtExploracion.setText(consulta.getExploracion());
+        txtDiagnostico.setText(consulta.getDiagnostico());
+        txtTratamiento.setText(consulta.getTratamiento());
+        txtObservaciones.setText(consulta.getObservaciones());
+
+        lblEspecialidad.setText(
+                "Especialidad: " +
+                        especialidadDAO.findById(
+                                episodioSeleccionado.getIdEspecialidad()
+                        ).getNombre()
+        );
+    }
+    private void deshabilitarEdicionConsulta() {
+
+        txtMotivoConsulta.setEditable(false);
+        txtAnamnesis.setEditable(false);
+        txtExploracion.setEditable(false);
+        txtDiagnostico.setEditable(false);
+        txtTratamiento.setEditable(false);
+        txtObservaciones.setEditable(false);
+
+        cmbEpisodio.setDisable(true);
+        cmbEspecialidad.setDisable(true);
+
+        btnGrabarConsulta.setDisable(true);
+    }
+
 
 }
