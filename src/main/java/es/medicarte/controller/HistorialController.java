@@ -1,6 +1,7 @@
 package es.medicarte.controller;
 
 import es.medicarte.model.*;
+import es.medicarte.service.InformeConsultaService;
 import es.medicarte.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -246,14 +247,6 @@ public class HistorialController {
         );
     }
 
-
-    @FXML
-    private void imprimir() {
-        new Alert(Alert.AlertType.INFORMATION,
-                "La impresión se implementará en una fase posterior.")
-                .showAndWait();
-    }
-
     @FXML
     private void cancelar() {
         SceneManager.loadScene(
@@ -261,5 +254,22 @@ public class HistorialController {
                 "MedicArte - Pacientes"
         );
     }
+
+    @FXML
+    private void imprimir() {
+
+        Consulta seleccionada =
+                tblConsultas.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe seleccionar una consulta.")
+                    .showAndWait();
+            return;
+        }
+
+        InformeConsultaService.generarPdfConsulta(seleccionada);
+    }
+
 }
 

@@ -121,8 +121,7 @@
                     <HBox spacing="10" alignment="CENTER_RIGHT">
                         <Button fx:id="btnVerConsulta"
                                 text="Ver consulta completa" onAction="#verConsultaCompleta"/>
-                        <Button fx:id="btnImprimir"
-                                text="Imprimir"/>
+                        <Button fx:id="btnImprimir" onAction="#imprimir" text="Imprimir"/>
                         <Button text="Cancelar"/>
                     </HBox>
                 </VBox>
