@@ -1,0 +1,269 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="informeconsulta" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6ff5a51c-456f-4fe9-87cd-534c65ca107b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<parameter name="MEDICO" class="java.lang.String"/>
+	<parameter name="ESPECIALIDAD" class="java.lang.String"/>
+	<parameter name="EPISODIO" class="java.lang.String"/>
+	<parameter name="OBSERVACIONES" class="java.lang.String"/>
+	<parameter name="TRATAMIENTO" class="java.lang.String"/>
+	<parameter name="DIAGNOSTICO" class="java.lang.String"/>
+	<parameter name="EXPLORACION" class="java.lang.String"/>
+	<parameter name="MOTIVO_CONSULTA" class="java.lang.String"/>
+	<parameter name="FECHA_CONSULTA" class="java.lang.String"/>
+	<parameter name="POLIZA" class="java.lang.String"/>
+	<parameter name="ASEGURADORA" class="java.lang.String"/>
+	<parameter name="PACIENTE_NUSS" class="java.lang.String"/>
+	<parameter name="PACIENTE_NUHSA" class="java.lang.String"/>
+	<parameter name="PACIENTE_NHC" class="java.lang.String"/>
+	<parameter name="PACIENTE_EMAIL" class="java.lang.String"/>
+	<parameter name="PACIENTE_TELEFONO" class="java.lang.String"/>
+	<parameter name="PACIENTE_PROVINCIA" class="java.lang.String"/>
+	<parameter name="PACIENTE_CP" class="java.lang.String"/>
+	<parameter name="PACIENTE_DIRECCION" class="java.lang.String"/>
+	<parameter name="PACIENTE_SEXO" class="java.lang.String"/>
+	<parameter name="PACIENTE_EDAD" class="java.lang.String"/>
+	<parameter name="PACIENTE_FECHA_NAC" class="java.lang.String"/>
+	<parameter name="LOGO_CLINICA" class="java.io.InputStream"/>
+	<parameter name="NOMBRE_CLINICA" class="java.lang.String"/>
+	<parameter name="PACIENTE_DNI" class="java.lang.String"/>
+	<parameter name="PACIENTE_NOMBRE" class="java.lang.String"/>
+	<parameter name="DIRECCION_CLINICA" class="java.lang.String"/>
+	<parameter name="TELEFONO_CLINICA" class="java.lang.String"/>
+	<parameter name="ANTECEDENTES_FAMILIARES" class="java.lang.String"/>
+	<parameter name="ANTECEDENTES_PERSONALES" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background splitType="Stretch"/>
+	<title height="120" splitType="Stretch">
+		<element kind="textField" uuid="d4d99406-edd7-4e62-b90d-4e5bdd71dd0c" x="10" y="10" width="59" height="58">
+			<expression><![CDATA[$P{LOGO_CLINICA}]]></expression>
+		</element>
+		<element kind="textField" uuid="a8074c6e-2cea-4709-bd4f-bc9eb71aaa3c" x="351" y="0" width="199" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{NOMBRE_CLINICA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="textField" uuid="694b779d-6e3a-4390-b1cc-46e05c26142c" x="351" y="19" width="199" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{MEDICO}]]></expression>
+		</element>
+		<element kind="textField" uuid="4efdbfa8-98b9-42ea-97a3-6f5cafc19689" x="351" y="39" width="199" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{DIRECCION_CLINICA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="textField" uuid="0e0e8e66-b5ca-43ba-8911-c02aa217bc00" x="351" y="60" width="199" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{TELEFONO_CLINICA}]]></expression>
+		</element>
+		<element kind="staticText" uuid="681da19d-26d1-474d-b90e-a9fd34b69a69" x="158" y="90" width="230" height="30" fontSize="14.0">
+			<text><![CDATA[INFORME CLÍNICO DE CONSULTA]]></text>
+		</element>
+	</title>
+	<pageHeader height="116" splitType="Stretch">
+		<element kind="staticText" uuid="21a16611-3160-49b0-a4a6-472f4e2c827b" x="0" y="0" width="142" height="19">
+			<text><![CDATA[Identificacion del Paciente]]></text>
+		</element>
+		<element kind="line" uuid="ee9bbca5-6dba-4009-b9fd-f27cdb87a339" x="-10" y="19" width="553" height="1"/>
+		<element kind="staticText" uuid="a0cc3540-458d-4bef-a7d6-08ea589e4815" x="2" y="30" width="75" height="15">
+			<text><![CDATA[NHC]]></text>
+		</element>
+		<element kind="staticText" uuid="0e1e39d8-6aaa-4d55-a802-d494a746e70a" x="2" y="45" width="75" height="15">
+			<text><![CDATA[NUHSA]]></text>
+		</element>
+		<element kind="staticText" uuid="9dc29c8b-832d-4d8f-8233-8d86cffba457" x="2" y="60" width="75" height="15">
+			<text><![CDATA[F. NAC]]></text>
+		</element>
+		<element kind="staticText" uuid="83b7fce1-4622-45ae-93b1-360d22e92b07" x="2" y="75" width="75" height="15">
+			<text><![CDATA[NUSS]]></text>
+		</element>
+		<element kind="staticText" uuid="71388c7d-78e7-46b8-83a7-b0f4631da492" x="2" y="90" width="75" height="15">
+			<text><![CDATA[ASEGURADORA]]></text>
+		</element>
+		<element kind="staticText" uuid="ca0887b0-b91a-45dd-844a-fbec5f7d0230" x="158" y="30" width="95" height="15">
+			<text><![CDATA[TIPO CONSULTA]]></text>
+		</element>
+		<element kind="staticText" uuid="cae7657e-6882-4efe-b527-d1fdb5316d2d" x="158" y="45" width="75" height="15">
+			<text><![CDATA[TELEFONO]]></text>
+		</element>
+		<element kind="staticText" uuid="0a2f211b-204e-46aa-8f92-a6308675832c" x="158" y="60" width="75" height="15">
+			<text><![CDATA[SEXO]]></text>
+		</element>
+		<element kind="staticText" uuid="0db1cbf4-b3bc-40c2-9910-09d2cdcc76e1" x="158" y="75" width="75" height="15">
+			<text><![CDATA[EDAD]]></text>
+		</element>
+		<element kind="staticText" uuid="338b97e6-6956-41ac-b462-a6df5cfa760f" x="158" y="90" width="75" height="15">
+			<text><![CDATA[Nº POLIZA]]></text>
+		</element>
+		<element kind="staticText" uuid="0d60f3be-059e-4273-81d1-e777df6722db" x="332" y="30" width="67" height="15">
+			<text><![CDATA[PACIENTE]]></text>
+		</element>
+		<element kind="staticText" uuid="176f2db9-3f1c-4cb0-90fd-6684bed08ed0" x="332" y="45" width="67" height="15">
+			<text><![CDATA[DOMICILIO]]></text>
+		</element>
+		<element kind="staticText" uuid="740cac91-5aa4-4498-b54b-3dd559ea4246" x="332" y="60" width="67" height="15">
+			<text><![CDATA[LOCALIDAD]]></text>
+		</element>
+		<element kind="staticText" uuid="9124e85b-9603-4d5f-9342-1465265673b6" x="332" y="75" width="67" height="15">
+			<text><![CDATA[PROVINCIA]]></text>
+		</element>
+		<element kind="staticText" uuid="ceca5cdd-0a9e-4477-aebb-4294e87f59f9" x="332" y="90" width="67" height="15">
+			<text><![CDATA[CP]]></text>
+		</element>
+		<element kind="textField" uuid="b1b43369-05da-4c83-8410-b8aeb8f94df2" x="403" y="30" width="130" height="15">
+			<expression><![CDATA[$P{PACIENTE_NOMBRE}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="795ba477-2720-45c4-9965-c8e2fca12df1" x="403" y="45" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_DIRECCION}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="901590f4-dcb5-44b1-809b-f04421082f29" x="403" y="75" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_PROVINCIA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="c99c9082-08d2-45b9-9f89-25f88fcf2693" x="403" y="90" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_CP}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="f60c0617-7750-47b9-b06a-1b16a5338ee1" x="240" y="45" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_TELEFONO}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="576cf76a-d765-48ac-b010-d89431b9ba63" x="240" y="60" width="138" height="15">
+			<expression><![CDATA[$P{PACIENTE_SEXO}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="544d1b59-0be2-4c8b-9468-720c8cd6ea0d" x="240" y="75" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_EDAD}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="e4ac220a-eae9-4aa9-9096-de2cea0e9155" x="240" y="90" width="142" height="15">
+			<expression><![CDATA[$P{POLIZA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="49acf414-1bfe-4c61-88f4-9b9804086ee4" x="75" y="30" width="130" height="15">
+			<expression><![CDATA[$P{PACIENTE_NHC}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="3e390c90-f8be-4e01-ae0b-f71fa6a011a3" x="75" y="45" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_NUHSA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="861f1b48-2d58-4f80-8458-94482a8cfa57" x="75" y="60" width="138" height="15">
+			<expression><![CDATA[$P{PACIENTE_FECHA_NAC}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="0e6b44c4-e8ca-4c61-bf2c-b984a9689421" x="75" y="75" width="142" height="15">
+			<expression><![CDATA[$P{PACIENTE_NUSS}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="d4566296-59b3-4de2-a2b1-08db0b254b8d" x="75" y="90" width="142" height="15">
+			<expression><![CDATA[$P{ASEGURADORA}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+	</pageHeader>
+	<detail>
+		<band height="386" splitType="Stretch">
+			<element kind="staticText" uuid="13636817-f62b-4f34-a0d0-a780834a5b3d" x="-2" y="4" width="142" height="19">
+				<text><![CDATA[Datos de Informe]]></text>
+			</element>
+			<element kind="line" uuid="30685958-7668-4d3a-835d-cc6608e6128a" x="-12" y="23" width="553" height="1"/>
+			<element kind="staticText" uuid="70b2ba43-da34-4fc3-b16d-2c6b29c2018f" x="0" y="34" width="90" height="15">
+				<text><![CDATA[F 1ª CONSU]]></text>
+			</element>
+			<element kind="staticText" uuid="9d6d12ae-36da-463d-a89d-0c7b50e1dd77" x="0" y="49" width="75" height="15">
+				<text><![CDATA[F. CONSULTA]]></text>
+			</element>
+			<element kind="staticText" uuid="7ce7debd-e368-40d2-aebf-3785a8a25ee9" x="0" y="64" width="75" height="15">
+				<text><![CDATA[ESPECIALIDAD]]></text>
+			</element>
+			<element kind="staticText" uuid="e65179cd-d140-4a47-aeca-0628ae6657fd" x="0" y="79" width="75" height="15">
+				<text><![CDATA[MEDICO]]></text>
+			</element>
+			<element kind="staticText" uuid="6b54e4a4-eb84-455d-a421-e0d5ad367acb" x="235" y="34" width="134" height="15">
+				<text><![CDATA[MOTIVO DE CONSULTA]]></text>
+			</element>
+			<element kind="line" uuid="850d846d-2f02-4308-a205-a0904d6bf6a5" x="-7" y="99" width="553" height="1"/>
+			<element kind="staticText" uuid="0adc9ef0-f245-496a-aa60-5db8afb9bc45" positionType="Float" x="0" y="110" width="199" height="15">
+				<text><![CDATA[ANTECEDENTES FAMILIARES]]></text>
+			</element>
+			<element kind="staticText" uuid="cf6ddbca-de21-4de8-a097-818b99c4a2b1" positionType="Float" x="0" y="155" width="199" height="15">
+				<text><![CDATA[ANTECEDENTES PERSONALES]]></text>
+			</element>
+			<element kind="staticText" uuid="0e935f1b-5f80-44da-974b-7c0ee9198739" positionType="Float" x="0" y="200" width="199" height="15">
+				<text><![CDATA[DIAGNÓSTICO]]></text>
+			</element>
+			<element kind="staticText" uuid="19d5a529-1d57-44aa-b8ea-9eb77e8084b8" positionType="Float" x="0" y="245" width="199" height="15">
+				<text><![CDATA[EXPLORACION]]></text>
+			</element>
+			<element kind="staticText" uuid="c9c8a5bd-111f-4329-97d2-47871ecb4049" positionType="Float" x="0" y="291" width="199" height="15">
+				<text><![CDATA[TRATAMIENTO]]></text>
+			</element>
+			<element kind="staticText" uuid="284fbbd3-2d1d-4cf3-8538-aa718b18ebbb" positionType="Float" x="0" y="337" width="199" height="15">
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</element>
+			<element kind="textField" uuid="e3c9481e-a5d2-4348-a17f-2356564e54e6" x="75" y="34" width="142" height="15">
+				<expression><![CDATA[$P{ASEGURADORA}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			</element>
+			<element kind="textField" uuid="2cb77e05-986a-493d-9a93-36590f83b24c" x="75" y="49" width="142" height="15">
+				<expression><![CDATA[$P{ASEGURADORA}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			</element>
+			<element kind="textField" uuid="24a38b07-468b-4727-a6f7-836362c9fcd3" x="75" y="64" width="142" height="15">
+				<expression><![CDATA[$P{ESPECIALIDAD}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			</element>
+			<element kind="textField" uuid="668b6a5c-0837-4aed-bbbe-100c401816fc" x="75" y="79" width="142" height="15">
+				<expression><![CDATA[$P{MEDICO}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			</element>
+			<element kind="textField" uuid="daae271c-08fe-4f16-ac7c-c8f8fd95a4d7" x="235" y="49" width="298" height="44">
+				<expression><![CDATA[$P{MOTIVO_CONSULTA}]]></expression>
+			</element>
+			<element kind="textField" uuid="bc66ae49-bc0a-4082-b083-e47154f4030f" positionType="Float" x="10" y="306" width="510" height="24" textAdjust="StretchHeight">
+				<expression><![CDATA[$P{TRATAMIENTO}]]></expression>
+			</element>
+			<element kind="textField" uuid="623dc37c-f5f8-4ae6-87bc-5e1aabf4edd1" positionType="Float" x="10" y="260" width="510" height="24" textAdjust="StretchHeight">
+				<expression><![CDATA[$P{EXPLORACION}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="275eb6e1-f078-4fbf-b9eb-cc217766d3b9" positionType="Float" x="10" y="215" width="510" height="24" textAdjust="StretchHeight">
+				<expression><![CDATA[$P{DIAGNOSTICO}]]></expression>
+			</element>
+			<element kind="textField" uuid="2b51e7c2-6f26-4d20-afb1-231246d11bb3" positionType="Float" x="10" y="125" width="510" height="24" textAdjust="StretchHeight" blankWhenNull="false" hTextAlign="Justified">
+				<expression><![CDATA[$P{ANTECEDENTES_FAMILIARES}]]></expression>
+			</element>
+			<element kind="textField" uuid="c036c752-545e-4281-a0e2-38d136dd4230" positionType="Float" x="10" y="171" width="510" height="26" textAdjust="StretchHeight">
+				<expression><![CDATA[$P{ANTECEDENTES_PERSONALES}]]></expression>
+			</element>
+			<element kind="textField" uuid="0b025543-6c73-495d-a8ad-4831392735d7" positionType="Float" x="10" y="352" width="510" height="24" textAdjust="StretchHeight">
+				<expression><![CDATA[$P{OBSERVACIONES}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="73" splitType="Stretch">
+		<element kind="textField" uuid="7c37755a-6c90-44f1-a013-c50d1090b405" x="470" y="50" width="79" height="19">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="staticText" uuid="c0ce34d9-31ff-40b7-80e4-cf529ca869fc" x="361" y="10" width="40" height="19">
+			<text><![CDATA[Fdo. Dr. ]]></text>
+		</element>
+		<element kind="textField" uuid="e32a7482-dd62-4512-8e60-da7c501db495" x="399" y="10" width="150" height="19">
+			<expression><![CDATA[$P{MEDICO}]]></expression>
+		</element>
+	</pageFooter>
+</jasperReport>
