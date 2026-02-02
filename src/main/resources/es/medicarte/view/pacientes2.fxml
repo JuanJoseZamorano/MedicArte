@@ -223,16 +223,16 @@
 
             <!-- ===== DATOS CLÍNICOS ===== -->
             <TabPane prefHeight="207.0" prefWidth="550.0" side="BOTTOM">
-                <Tab text="Antecedentes personales" closable="false">
+                <Tab closable="false" text="Antecedentes personales">
                     <TextArea fx:id="txtAntPersonales" prefHeight="162.0" prefWidth="550.0" />
                 </Tab>
-                <Tab text="Antecedentes familiares" closable="false">
+                <Tab closable="false" text="Antecedentes familiares">
                     <TextArea fx:id="txtAntFamiliares" />
                 </Tab>
-                <Tab text="Tratamiento" closable="false">
+                <Tab closable="false" text="Tratamiento">
                     <TextArea fx:id="txtTratamiento" />
                 </Tab>
-                <Tab text="Alergias" closable="false">
+                <Tab closable="false" text="Alergias">
                     <TextArea fx:id="txtAlergias" />
                 </Tab>
             </TabPane>
@@ -244,6 +244,7 @@
                 <HBox spacing="10">
                     <Button onAction="#guardarPaciente" style="-fx-text-fill: blue;" text="Grabar" />
                     <Button onAction="#eliminarPaciente" style="-fx-text-fill: red;" text="Eliminar" />
+               <Button onAction="#setEditarPacientes" style="-fx-text-fill: red;" text="Editar" />
                     <Button fx:id="btnLimpiar" onAction="#limpiarFormulario" style="-fx-text-fill: green;" text="Limpiar" />
                 </HBox>
 
@@ -251,8 +252,8 @@
 
                 <!-- DERECHA -->
                 <HBox spacing="10">
-                    <Button text="Ver citas" onAction="#verCitas"/>
-                    <Button text="Ver historial" onAction="#verHistorial"/>
+                    <Button onAction="#verCitas" text="Ver citas" />
+                    <Button onAction="#verHistorial" text="Ver historial" />
                     <Button text="Crear cita" />
                 </HBox>
 

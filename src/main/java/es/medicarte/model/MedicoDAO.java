@@ -34,4 +34,35 @@ public class MedicoDAO {
 
         return null;
     }
+
+    public Integer insert(Medico medico) {
+
+        String sql = """
+        INSERT INTO medicarte.medico
+        (nombre_apellidos, num_colegiado, id_especialidad, activo)
+        VALUES (?, ?, ?, ?)
+        RETURNING id_medico
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, medico.getNombreApellidos());
+            ps.setString(2, medico.getNumColegiado());
+            ps.setInt(3, medico.getIdEspecialidad());
+            ps.setBoolean(4, medico.isActivo());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_medico");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

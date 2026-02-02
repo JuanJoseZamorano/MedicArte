@@ -5,6 +5,7 @@ import es.medicarte.model.PacienteDAO;
 import es.medicarte.util.FileUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -59,6 +60,7 @@ public class PacientesController {
 
     private Paciente pacienteSeleccionado;
     private String fotoSeleccionadaPath;
+    private boolean sololectura = false;
 
     @FXML
     private void initialize() {
@@ -446,4 +448,6 @@ public class PacientesController {
         );
     }
 
+    public void setEditarPacientes() {
+    }
 }

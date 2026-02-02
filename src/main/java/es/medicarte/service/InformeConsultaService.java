@@ -18,7 +18,7 @@ public class InformeConsultaService {
      * Genera un informe clínico en PDF a partir de una consulta
      */
     public static void generarPdfConsulta(Consulta consulta) {
-
+        ConfiguracionDAO configuracionDAO = new ConfiguracionDAO();
         try {
             // =========================
             // CARGAR PLANTILLA JRXML
@@ -58,7 +58,12 @@ public class InformeConsultaService {
             Map<String, Object> params = new HashMap<>();
 
             // ---------- DATOS CLÍNICA ----------
-            params.put("NOMBRE_CLINICA", "MedicArte");
+            String nombreClinica = configuracionDAO.getValor("NOMBRE_CLINICA");
+
+            params.put(
+                    "NOMBRE_CLINICA",
+                    nombreClinica != null ? nombreClinica : "MedicArte"
+            );
             params.put("DIRECCION_CLINICA", "C/ Ejemplo 123");
             params.put("TELEFONO_CLINICA", "955 123 456");
 

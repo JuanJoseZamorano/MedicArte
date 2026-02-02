@@ -1,6 +1,7 @@
 package es.medicarte.controller;
 
 import es.medicarte.util.SceneManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import es.medicarte.util.UserSession;
@@ -33,6 +34,18 @@ public class MedicoDashboardController {
         SceneManager.loadScene(
                 "/es/medicarte/view/citas.fxml",
                 "MedicArte - Citas"
+        );
+    }
+
+    @FXML
+    private void cerrarSesion() {
+        // Limpiamos la sesión del usuario
+        UserSession.clear();
+
+        // Volvemos a la pantalla de login
+        SceneManager.loadScene(
+                "/es/medicarte/view/login.fxml",
+                "MedicArte - Login"
         );
     }
 }

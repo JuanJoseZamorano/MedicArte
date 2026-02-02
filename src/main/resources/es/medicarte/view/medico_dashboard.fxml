@@ -1,26 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
+<BorderPane xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="es.medicarte.controller.MedicoDashboardController">
 
-    <top>
-<!--        añadimos el nombre del usuario actual -->
-        <Label fx:id="lblUserInfo"
-               style="-fx-font-size: 16px; -fx-padding: 10;" />
-    </top>
+    <!-- ================= MENÚ LATERAL ================= -->
+    <left>
+        <VBox prefWidth="220" spacing="20"
+              style="-fx-background-color: #dff7f8;">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
 
-    <center>
-        <VBox spacing="10" alignment="CENTER">
-            <Button text="Pacientes" onAction="#abrirPacientes"/>
-            <Button text="Citas" onAction="#abrirCitas"/>
-            <Button text="Agenda" />
+            <!-- Logo y nombre app -->
+            <VBox spacing="10" alignment="CENTER">
+                <ImageView fx:id="imgLogo"
+                           fitWidth="120"
+                           preserveRatio="true"/>
+                <Label text="MedicArte"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Datos médico -->
+            <VBox spacing="5">
+                <Label text="Panel médico"
+                       style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblUserInfo"
+                       text="Dr. Nombre Apellidos"/>
+            </VBox>
+
+            <Separator/>
+
+            <!-- Navegación -->
+            <Button text="Pacientes"
+                    prefHeight="40"
+                    onAction="#abrirPacientes"/>
+
+            <Button text="Citas"
+                    prefHeight="40"
+                    onAction="#abrirCitas"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Cerrar sesión -->
+            <Button text="Cerrar sesión"
+                    onAction="#cerrarSesion"/>
         </VBox>
+    </left>
+
+    <!-- ================= CONTENIDO CENTRAL ================= -->
+    <center>
+        <GridPane hgap="20" vgap="20">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <!-- ===== TARJETA: Citas para hoy ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #ffffff;
+                         -fx-padding: 20;">
+                <Label text="Citas para hoy"/>
+                <Label fx:id="lblCitasHoy"
+                       text="0"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- ===== TARJETA: Mensajes (visual) ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER"
+                  GridPane.columnIndex="1"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #ffffff;
+                         -fx-padding: 20;">
+                <Label text="Mensajes"/>
+                <Label text="Sin mensajes nuevos"/>
+            </VBox>
+
+            <!-- ===== TARJETA: Recordatorios (visual) ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER"
+                  GridPane.columnIndex="2"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #fffbe6;
+                         -fx-padding: 20;">
+                <Label text="Recordatorios"/>
+                <Label text="Revisar citas pendientes"/>
+                <Label text="Copias de seguridad al día"/>
+            </VBox>
+
+            <!-- ===== TARJETA: Próxima cita ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER_LEFT"
+                  GridPane.rowIndex="1"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #ffffff;
+                         -fx-padding: 20;">
+                <Label text="Próxima cita"
+                       style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblProximaCita"
+                       text="No hay citas programadas"/>
+            </VBox>
+
+            <!-- ===== TARJETA: Último paciente ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER_LEFT"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="1"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #ffffff;
+                         -fx-padding: 20;">
+                <Label text="Último paciente"
+                       style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblUltimoPaciente"
+                       text="—"/>
+            </VBox>
+
+            <!-- ===== TARJETA: Fecha y hora ===== -->
+            <VBox spacing="10"
+                  alignment="CENTER"
+                  GridPane.columnIndex="2"
+                  GridPane.rowIndex="1"
+                  style="-fx-border-color: #ccc;
+                         -fx-background-color: #ffffff;
+                         -fx-padding: 20;">
+                <Label text="Fecha y hora actual"/>
+                <Label fx:id="lblFechaHora"
+                       text="--/--/---- --:--"/>
+            </VBox>
+
+        </GridPane>
     </center>
 
 </BorderPane>

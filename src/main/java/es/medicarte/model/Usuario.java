@@ -58,4 +58,10 @@ public class Usuario {
     public void setIdMedico(Integer idMedico) {
         this.idMedico = idMedico;
     }
+    // SOBREESCRIBIMOS LE METODO TOSTRING PARA QUE NOS APAREZCA EL
+    // USUARIO EN AL LISTA DE COMBOBOX PARA ELIMINAR EN ADMINISTRACION
+    @Override
+    public String toString() {
+        return username + " (" + rol + ")";
+    }
 }
