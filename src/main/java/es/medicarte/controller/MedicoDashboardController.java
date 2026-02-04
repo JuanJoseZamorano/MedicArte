@@ -1,5 +1,6 @@
 package es.medicarte.controller;
 
+import es.medicarte.util.LogoUtils;
 import es.medicarte.util.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,6 +9,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import es.medicarte.util.UserSession;
 import es.medicarte.model.Usuario;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.Optional;
 
@@ -15,9 +18,15 @@ public class MedicoDashboardController {
 
     @FXML
     private Label lblUserInfo;
+    @FXML
+    private ImageView imgLogo;
 
     @FXML
     private void initialize() {
+        Image logo = LogoUtils.getLogo(120);
+        if (logo != null) {
+            imgLogo.setImage(logo);
+        }
         Usuario u = UserSession.getUsuario();
         if (u != null) {
             lblUserInfo.setText("Bienvenido, " + u.getUsername() + " (MEDICO)");

@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.*;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Period;
@@ -67,9 +68,22 @@ public class InformeConsultaService {
             params.put("DIRECCION_CLINICA", "C/ Ejemplo 123");
             params.put("TELEFONO_CLINICA", "955 123 456");
 
-            InputStream logoStream =
-                    InformeConsultaService.class
-                            .getResourceAsStream("/report/logo.png");
+            String logoPath = configuracionDAO.getValor("LOGO_CLINICA");
+            InputStream logoStream = null;
+
+            if (logoPath != null && !logoPath.isBlank()) {
+                File logoFile = new File(logoPath);
+                if (logoFile.exists()) {
+                    logoStream = new FileInputStream(logoFile);
+                }
+            }
+
+// Si no hay logo configurado o falla, usar logo por defecto
+            if (logoStream == null) {
+                logoStream = InformeConsultaService.class
+                        .getResourceAsStream("/report/logo.png");
+            }
+
             params.put("LOGO_CLINICA", logoStream);
 
             // ---------- DATOS PACIENTE ----------

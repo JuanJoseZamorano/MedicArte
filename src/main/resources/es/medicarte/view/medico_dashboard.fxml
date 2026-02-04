@@ -37,6 +37,7 @@
             <Separator/>
 
             <!-- Navegación -->
+        <VBox spacing="10" alignment="CENTER">
             <Button text="Pacientes"
                     prefHeight="40"
                     onAction="#abrirPacientes"/>
@@ -50,6 +51,7 @@
             <!-- Cerrar sesión -->
             <Button text="Cerrar sesión"
                     onAction="#cerrarSesion"/>
+        </VBox>
         </VBox>
     </left>
 

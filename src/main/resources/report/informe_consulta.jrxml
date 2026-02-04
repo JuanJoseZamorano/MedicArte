@@ -34,7 +34,7 @@
 	<query language="sql"><![CDATA[]]></query>
 	<background splitType="Stretch"/>
 	<title height="120" splitType="Stretch">
-		<element kind="textField" uuid="d4d99406-edd7-4e62-b90d-4e5bdd71dd0c" x="10" y="10" width="59" height="58">
+		<element kind="image" uuid="d4d99406-edd7-4e62-b90d-4e5bdd71dd0c" x="10" y="10" width="59" height="58">
 			<expression><![CDATA[$P{LOGO_CLINICA}]]></expression>
 		</element>
 		<element kind="textField" uuid="a8074c6e-2cea-4709-bd4f-bc9eb71aaa3c" x="351" y="0" width="199" height="19" hTextAlign="Right">

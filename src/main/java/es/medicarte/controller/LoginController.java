@@ -1,5 +1,6 @@
 package es.medicarte.controller;
 
+import es.medicarte.util.LogoUtils;
 import es.medicarte.util.PasswordUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -9,6 +10,8 @@ import es.medicarte.util.SceneManager;
 import es.medicarte.model.Usuario;
 import es.medicarte.model.UsuarioDAO;
 import es.medicarte.util.UserSession;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class LoginController {
 
@@ -18,6 +21,16 @@ public class LoginController {
     @FXML
     private PasswordField txtPassword;
 
+    @FXML
+    private ImageView imgLogo;
+
+    @FXML
+    private void initialize() {
+        Image logo = LogoUtils.getLogo(120);
+        if (logo != null) {
+            imgLogo.setImage(logo);
+        }
+    }
     @FXML
     private void handleLogin() {
 
