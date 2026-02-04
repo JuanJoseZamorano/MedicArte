@@ -3,9 +3,13 @@ package es.medicarte.controller;
 import es.medicarte.util.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import es.medicarte.util.UserSession;
 import es.medicarte.model.Usuario;
+
+import java.util.Optional;
 
 public class MedicoDashboardController {
 
@@ -39,13 +43,22 @@ public class MedicoDashboardController {
 
     @FXML
     private void cerrarSesion() {
-        // Limpiamos la sesión del usuario
-        UserSession.clear();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar cierre de sesión");
+        alert.setContentText("Se cerrará la sesión actual y volverás al login.¿ Está seguro?");
 
-        // Volvemos a la pantalla de login
-        SceneManager.loadScene(
-                "/es/medicarte/view/login.fxml",
-                "MedicArte - Login"
-        );
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Limpiamos la sesión del usuario
+            UserSession.clear();
+
+            // Volvemos a la pantalla de login
+            SceneManager.loadScene(
+                    "/es/medicarte/view/login.fxml",
+                    "MedicArte - Login"
+            );
+        }
     }
+
 }

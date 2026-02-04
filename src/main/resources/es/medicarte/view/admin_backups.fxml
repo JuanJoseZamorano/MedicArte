@@ -19,14 +19,14 @@
     <TitledPane text="Realizar copia de seguridad" expanded="true">
         <VBox spacing="10">
             <Label text="Última copia realizada hace 9 días"/>
-            <Button text="Realizar copia"/>
+            <Button text="Realizar copia" onAction="#crearBackup"/>
         </VBox>
     </TitledPane>
 
     <TitledPane text="Restaurar copia de seguridad">
         <VBox spacing="10">
             <ComboBox fx:id="cmbBackups"/>
-            <Button text="Restaurar copia"/>
+            <Button text="Restaurar copia" onAction="#restaurarBackup"/>
         </VBox>
     </TitledPane>
 
