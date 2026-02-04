@@ -1,5 +1,6 @@
 package es.medicarte.controller;
 
+import es.medicarte.model.ConfiguracionDAO;
 import es.medicarte.service.BackupService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,9 +10,12 @@ import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class AdminBackupsController {
-
+    private final ConfiguracionDAO configuracionDAO = new ConfiguracionDAO();
     @FXML
     private ComboBox<File> cmbBackups;
 
@@ -37,6 +41,7 @@ public class AdminBackupsController {
             File backup = BackupService.crearBackup();
             mostrarInfo("Backup creado:\n" + backup.getName());
             cargarBackups();
+            fechaBackup();
         } catch (Exception e) {
             mostrarError(e.getMessage());
         }
@@ -97,6 +102,21 @@ public class AdminBackupsController {
         } catch (Exception e) {
             mostrarInfo(e.getMessage());
         }
+    }
+
+    @FXML
+    private void fechaBackup() {
+
+        LocalDateTime fechaBKP = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                "d 'de' MMMM 'de' yyyy. HH:mm",
+                new Locale("es", "ES")
+        );
+
+        String fechaFormateada = fechaBKP.format(formatter);
+
+        configuracionDAO.setValor("ULTIMA_FECHA_BKP", fechaFormateada);
+
     }
 
 }

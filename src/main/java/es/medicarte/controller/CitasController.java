@@ -109,7 +109,9 @@ public class CitasController {
                     );
                     if ("CANCELADA".equals(c.getEstado())) {
                         setStyle("-fx-text-fill: red;");
-                    } else {
+                    } else if ("COMPLETADA".equals(c.getEstado())) {
+                        setStyle("-fx-text-fill: green;");
+                    } else    {
                         setStyle("");
                     }
                 }

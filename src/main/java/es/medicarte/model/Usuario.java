@@ -6,6 +6,7 @@ public class Usuario {
     private String username;
     private String passwordHash;
     private String rol;
+
     private boolean activo;
 
     // añadimos la variable necesaria de idmedico

@@ -31,6 +31,8 @@ public class SceneManager {
 
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();      // ajusta tamaño a la nueva vista
+            stage.centerOnScreen();   // centra en pantalla
             stage.show();
 
         } catch (IOException e) {
@@ -56,6 +58,8 @@ public class SceneManager {
 
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();      // ajusta tamaño a la nueva vista
+            stage.centerOnScreen();   // centra en pantalla
             stage.show();
 
         } catch (IOException e) {
@@ -80,6 +84,8 @@ public class SceneManager {
 
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();      // ajusta tamaño a la nueva vista
+            stage.centerOnScreen();   // centra en pantalla
             stage.show();
 
         } catch (IOException e) {
@@ -100,6 +106,8 @@ public class SceneManager {
 
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();      // ajusta tamaño a la nueva vista
+            stage.centerOnScreen();   // centra en pantalla
             stage.show();
 
         } catch (IOException e) {
@@ -119,6 +127,8 @@ public class SceneManager {
 
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.sizeToScene();      // ajusta tamaño a la nueva vista
+            stage.centerOnScreen();   // centra en pantalla
             stage.show();
 
         } catch (IOException e) {

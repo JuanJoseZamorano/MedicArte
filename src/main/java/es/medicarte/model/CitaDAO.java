@@ -144,4 +144,28 @@ public class CitaDAO {
             return false;
         }
     }
+    public int countCitasPendientesHoy() {
+
+        String sql = """
+        SELECT COUNT(*)
+        FROM medicarte.cita
+        WHERE estado = 'PENDIENTE'
+          AND DATE(fecha_hora) = CURRENT_DATE
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
 }
