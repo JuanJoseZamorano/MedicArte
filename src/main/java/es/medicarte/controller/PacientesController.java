@@ -77,6 +77,7 @@ public class PacientesController {
         cargarPacientes();
         configurarSeleccion();
         btnLimpiar.setVisible(false);
+
     }
 
     // =================== CONFIGURACIONES ===================

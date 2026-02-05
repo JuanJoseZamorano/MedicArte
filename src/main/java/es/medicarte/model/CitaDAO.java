@@ -168,4 +168,31 @@ public class CitaDAO {
         return 0;
     }
 
+    public Cita findProximaCitaPendiente() {
+
+        String sql = """
+        SELECT *
+        FROM medicarte.cita
+        WHERE estado = 'PENDIENTE'
+          AND fecha_hora > NOW()
+        ORDER BY fecha_hora ASC
+        LIMIT 1
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return mapResultSet(rs);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
 }

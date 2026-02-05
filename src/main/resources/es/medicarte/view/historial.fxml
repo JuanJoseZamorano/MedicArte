@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="es.medicarte.controller.HistorialController">
+<BorderPane prefWidth="762.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.medicarte.controller.HistorialController">
 
     <!-- ================= CABECERA PACIENTE ================= -->
     <top>
         <HBox spacing="20">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
             <!-- Datos del paciente -->
             <VBox spacing="5">
-                <Label fx:id="lblNombrePaciente"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold;"
-                       text="Paciente"/>
+                <Label fx:id="lblNombrePaciente" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Paciente" />
 
-                <Label fx:id="lblDni" text="DNI"/>
-                <Label fx:id="lblFechaNacimiento" text="Fecha nacimiento"/>
-                <Label fx:id="lblDireccion" text="Dirección"/>
-                <Label fx:id="lblEmail" text="Email"/>
-                <Label fx:id="lblTelefono" text="Teléfono"/>
-                <Label fx:id="lblAseguradora" text="Aseguradora / Póliza"/>
+                <Label fx:id="lblDni" text="DNI" />
+                <Label fx:id="lblFechaNacimiento" text="Fecha nacimiento" />
+                <Label fx:id="lblDireccion" text="Dirección" />
+                <Label fx:id="lblEmail" text="Email" />
+                <Label fx:id="lblTelefono" text="Teléfono" />
+                <Label fx:id="lblAseguradora" text="Aseguradora / Póliza" />
             </VBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
             <!-- Foto -->
-            <ImageView fx:id="imgFoto"
-                       fitWidth="120"
-                       fitHeight="150"
-                       preserveRatio="true"
-                       style="-fx-border-color: #999;"/>
+            <ImageView fx:id="imgFoto" fitHeight="150" fitWidth="120" preserveRatio="true" style="-fx-border-color: #999;" />
         </HBox>
     </top>
 
@@ -49,30 +50,19 @@
             <Tab text="General">
                 <VBox spacing="10">
                     <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
+                        <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
 
-                    <Label text="Episodios clínicos"
-                           style="-fx-font-weight: bold;"/>
+                    <Label style="-fx-font-weight: bold;" text="Episodios clínicos" />
 
                     <TableView fx:id="tblEpisodios">
 
                         <columns>
-                            <TableColumn fx:id="colEspecialidad"
-                                         text="Especialidad"
-                                         prefWidth="150"/>
-                            <TableColumn fx:id="colMotivo"
-                                         text="Motivo"
-                                         prefWidth="250"/>
-                            <TableColumn fx:id="colNumConsultas"
-                                         text="Nº Consultas"
-                                         prefWidth="120"/>
-                            <TableColumn fx:id="colFechaInicio"
-                                         text="Fecha inicio"
-                                         prefWidth="120"/>
-                            <TableColumn fx:id="colEstado"
-                                         text="Estado"
-                                         prefWidth="100"/>
+                            <TableColumn fx:id="colEspecialidad" prefWidth="150" text="Especialidad" />
+                            <TableColumn fx:id="colMotivo" prefWidth="250" text="Motivo" />
+                            <TableColumn fx:id="colNumConsultas" prefWidth="120" text="Nº Consultas" />
+                            <TableColumn fx:id="colFechaInicio" prefWidth="120" text="Fecha inicio" />
+                            <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
                         </columns>
 
                     </TableView>
@@ -83,51 +73,45 @@
             <Tab text="Episodios">
                 <VBox spacing="10">
                     <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
+                        <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
 
                     <!-- Filtros -->
                     <HBox spacing="10">
-                        <Label text="Episodio"/>
-                        <ComboBox fx:id="cmbFiltroEpisodio"
-                                  prefWidth="250"/>
+                        <Label text="Episodio" />
+                        <ComboBox fx:id="cmbFiltroEpisodio" prefWidth="250" />
 
-                        <Region HBox.hgrow="ALWAYS"/>
-
-                        <Button text="Buscar"/>
+                        <Region HBox.hgrow="ALWAYS" />
                     </HBox>
 
                     <!-- Listado de consultas -->
                     <TableView fx:id="tblConsultas">
 
                         <columns>
-                            <TableColumn fx:id="colEpisodioConsulta"
-                                         text="Episodio"
-                                         prefWidth="200"/>
-                            <TableColumn fx:id="colNumConsulta"
-                                         text="Nº Consulta"
-                                         prefWidth="100"/>
-                            <TableColumn fx:id="colMotivoConsulta"
-                                         text="Motivo"
-                                         prefWidth="300"/>
-                            <TableColumn fx:id="colFechaConsulta"
-                                         text="Fecha"
-                                         prefWidth="120"/>
+                            <TableColumn fx:id="colEpisodioConsulta" prefWidth="200" text="Episodio" />
+                            <TableColumn fx:id="colNumConsulta" prefWidth="100" text="Nº Consulta" />
+                            <TableColumn fx:id="colMotivoConsulta" prefWidth="300" text="Motivo" />
+                            <TableColumn fx:id="colFechaConsulta" prefWidth="120" text="Fecha" />
                         </columns>
 
                     </TableView>
 
                     <!-- Botonera -->
-                    <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button fx:id="btnVerConsulta"
-                                text="Ver consulta completa" onAction="#verConsultaCompleta"/>
-                        <Button fx:id="btnImprimir" onAction="#imprimir" text="Imprimir"/>
-                        <Button text="Cancelar"/>
+                    <HBox alignment="CENTER_RIGHT" spacing="10">
+                        <Button fx:id="btnVerConsulta" onAction="#verConsultaCompleta" text="Ver consulta completa" />
+                        <Button fx:id="btnImprimir" onAction="#imprimir" text="Imprimir" />
                     </HBox>
                 </VBox>
             </Tab>
 
         </TabPane>
     </center>
+   <bottom>
+            <Button onAction="#cancelar" alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Cancelar" textAlignment="CENTER" BorderPane.alignment="TOP_RIGHT">
+         <BorderPane.margin>
+            <Insets bottom="5.0" right="10.0" />
+         </BorderPane.margin>
+      </Button>
+   </bottom>
 
 </BorderPane>

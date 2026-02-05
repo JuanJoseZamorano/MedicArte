@@ -123,7 +123,7 @@ public class CitasController {
                             c.getFechaHora().toLocalDate() + " " +
                             c.getFechaHora().toLocalTime().withSecond(0) +
                             " - " +
-                            (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo")
+                            (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo")+ " (" + c.getEstado() + ")"
                     );
 
                     switch (c.getEstado()) {
@@ -157,6 +157,7 @@ public class CitasController {
 
         if (p != null) {
             lblPaciente.setText(p.getApellidos() + ", " + p.getNombre());
+            txtBuscarDni.setText(p.getDni());
         } else {
             lblPaciente.setText("Paciente desconocido");
         }
@@ -183,10 +184,11 @@ public class CitasController {
         String dni = txtBuscarDni.getText();
 
         if (dni == null || dni.isBlank()) {
-            new Alert(
-                    Alert.AlertType.WARNING,
-                    "Introduzca un DNI para buscar sus citas."
-            ).showAndWait();
+//            new Alert(
+//                    Alert.AlertType.WARNING,
+//                    "Introduzca un DNI para buscar sus citas."
+//            ).showAndWait();
+            cargarTodasLasCitas();
             return;
         }
 
@@ -246,7 +248,28 @@ public class CitasController {
 
     @FXML
     private void abrirHistorial() {
-        // Se implementará más adelante
+        listCitas.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> {
+                    if (newVal != null && !newVal.isCabecera()) {
+                        citaSeleccionada = newVal.getCita();
+
+                    }
+                }
+        );
+        Paciente p = pacienteDAO.findById(citaSeleccionada.getIdPaciente());
+        if (p == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar un paciente."
+            ).showAndWait();
+            return;
+        }
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/historial.fxml",
+                "MedicArte - Historial Clínico",
+                p
+        );
     }
 
     @FXML

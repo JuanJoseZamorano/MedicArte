@@ -29,6 +29,10 @@ public class MedicoDashboardController {
     @FXML
     private TextFlow txtFechaHora;
     @FXML
+    private Label lblProximoPaciente;
+    @FXML
+    private Label lblProximaCitaHora;
+    @FXML
     private Label lblCitasHoy;
     @FXML
     private Label lblUltimoBackup;
@@ -36,6 +40,7 @@ public class MedicoDashboardController {
     private ImageView imgLogo;
     private final MedicoDAO medicoDAO = new MedicoDAO();
     private final CitaDAO citaDAO = new CitaDAO();
+    private final PacienteDAO pacienteDAO = new PacienteDAO();
     @FXML
     private void initialize() {
         int citasHoy = citaDAO.countCitasPendientesHoy();
@@ -58,6 +63,7 @@ public class MedicoDashboardController {
         } else {
             lblUltimoBackup.setText("Último backup: \n no disponible");
         }
+        cargarProximaCita();
 
     }
 
@@ -125,6 +131,33 @@ public class MedicoDashboardController {
 
         reloj.setCycleCount(Timeline.INDEFINITE);
         reloj.play();
+    }
+    private void cargarProximaCita() {
+
+        Cita cita = citaDAO.findProximaCitaPendiente();
+
+        if (cita == null) {
+            lblProximoPaciente.setText("No hay citas pendientes");
+            lblProximaCitaHora.setText("—");
+            return;
+        }
+
+        Paciente p = pacienteDAO.findById(cita.getIdPaciente());
+
+        if (p != null) {
+            lblProximoPaciente.setText(
+                    p.getApellidos() + ", " + p.getNombre()
+            );
+        } else {
+            lblProximoPaciente.setText("Paciente desconocido");
+        }
+
+        lblProximaCitaHora.setText(
+                cita.getFechaHora()
+                        .toLocalDate() + " " +
+                        cita.getFechaHora()
+                                .toLocalTime().withSecond(0)
+        );
     }
 
 

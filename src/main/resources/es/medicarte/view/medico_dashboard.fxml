@@ -112,7 +112,8 @@
             <!-- ===== TARJETA: Próxima cita ===== -->
             <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-border-color: #ccc;                          -fx-background-color: #ffffff;                          -fx-padding: 20;" GridPane.rowIndex="1">
                 <Label style="-fx-font-weight: bold;" text="Próxima cita" />
-                <Label fx:id="lblProximaCita" text="No hay citas programadas" />
+                <Label fx:id="lblProximoPaciente" text="—"/>
+                <Label fx:id="lblProximaCitaHora" text="—"/>
             </VBox>
 
             <!-- ===== TARJETA: Último paciente ===== -->
