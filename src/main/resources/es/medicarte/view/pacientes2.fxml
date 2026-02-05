@@ -244,7 +244,7 @@
                 <HBox spacing="10">
                     <Button onAction="#guardarPaciente" style="-fx-text-fill: blue;" text="Grabar" />
                     <Button onAction="#eliminarPaciente" style="-fx-text-fill: red;" text="Eliminar" />
-               <Button onAction="#setEditarPacientes" style="-fx-text-fill: red;" text="Editar" />
+<!--               <Button onAction="#setEditarPacientes" style="-fx-text-fill: red;" text="Editar" />-->
                     <Button fx:id="btnLimpiar" onAction="#limpiarFormulario" style="-fx-text-fill: green;" text="Limpiar" />
                 </HBox>
 
@@ -254,7 +254,7 @@
                 <HBox spacing="10">
                     <Button onAction="#verCitas" text="Ver citas" />
                     <Button onAction="#verHistorial" text="Ver historial" />
-                    <Button text="Crear cita" />
+                    <Button onAction="#crearCita" text="Crear cita" />
                 </HBox>
 
             </HBox>

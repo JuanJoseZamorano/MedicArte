@@ -1,5 +1,6 @@
 package es.medicarte.controller;
 
+import es.medicarte.util.ItemListaCitas;
 import es.medicarte.util.SceneManager;
 import javafx.fxml.FXML;
 import es.medicarte.model.Paciente;
@@ -10,10 +11,11 @@ import es.medicarte.model.CitaDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import es.medicarte.model.Cita;
-import es.medicarte.model.CitaDAO;
-import es.medicarte.model.Paciente;
-import es.medicarte.model.PacienteDAO;
+
+import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
 
 
 public class CitasController {
@@ -25,10 +27,10 @@ public class CitasController {
     private TextField txtBuscarApellidos;
     @FXML
     private TextField txtBuscarNombre;
-    @FXML private ListView<Cita> listCitas;
+    @FXML private ListView<ItemListaCitas> listCitas;
 
     private final CitaDAO citaDAO = new CitaDAO();
-    private final ObservableList<Cita> citas = FXCollections.observableArrayList();
+    private final ObservableList<ItemListaCitas> citas = FXCollections.observableArrayList();
 
 
     @FXML private Label lblPaciente;
@@ -51,13 +53,13 @@ public class CitasController {
 
 
     private void cargarTodasLasCitas() {
-        citas.setAll(citaDAO.findAll());
-        listCitas.setItems(citas);
+        List<Cita> lista = citaDAO.findAll();
+        cargarCitasConCabeceras(lista);
     }
 
     private void cargarCitasPorPaciente(int idPaciente) {
-        citas.setAll(citaDAO.findByPaciente(idPaciente));
-        listCitas.setItems(citas);
+        List<Cita> lista = citaDAO.findByPaciente(idPaciente);
+        cargarCitasConCabeceras(lista);
     }
 
     public void setIdPacienteFiltro(Integer idPaciente) {
@@ -85,47 +87,64 @@ public class CitasController {
             txtBuscarDni.setDisable(true);
         }
     }
+    @FXML
+    private void buscarPaciente() {
+    }
     private void prepararVistaGeneral() {
         txtBuscarDni.setDisable(false);
         txtBuscarDni.clear();
     }
 
+
     private void configurarListViewCitas() {
 
         listCitas.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(Cita c, boolean empty) {
-                super.updateItem(c, empty);
+            protected void updateItem(ItemListaCitas item, boolean empty) {
+                super.updateItem(item, empty);
 
-                if (empty || c == null) {
+                if (empty || item == null) {
                     setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                if (item.isCabecera()) {
+                    setText(item.getTexto());
+                    setStyle("""
+                    -fx-font-weight: bold;
+                    -fx-text-fill: #555;
+                    -fx-padding: 10 0 5 10;
+                """);
                 } else {
-                    setText(
+                    Cita c = item.getCita();
+
+                    setText("   " +
                             c.getFechaHora().toLocalDate() + " " +
-                                    c.getFechaHora().toLocalTime().withSecond(0) +
-                                    " - " +
-                                    (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo") +
-                                    " (" + c.getEstado() + ")"
+                            c.getFechaHora().toLocalTime().withSecond(0) +
+                            " - " +
+                            (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo")
                     );
-                    if ("CANCELADA".equals(c.getEstado())) {
-                        setStyle("-fx-text-fill: red;");
-                    } else if ("COMPLETADA".equals(c.getEstado())) {
-                        setStyle("-fx-text-fill: green;");
-                    } else    {
-                        setStyle("");
+
+                    switch (c.getEstado()) {
+                        case "COMPLETADA" -> setStyle("-fx-text-fill: green;");
+                        case "CANCELADA"  -> setStyle("-fx-text-fill: red;");
+                        case "PENDIENTE"  -> setStyle("-fx-text-fill: blue;");
+                        default           -> setStyle("-fx-text-fill: black;");
                     }
                 }
             }
         });
     }
 
+
     private void configurarSeleccionCita() {
 
         listCitas.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> {
-                    if (newVal != null) {
-                        citaSeleccionada = newVal;
-                        mostrarDetalleCita(newVal);
+                    if (newVal != null && !newVal.isCabecera()) {
+                        citaSeleccionada = newVal.getCita();
+                        mostrarDetalleCita(citaSeleccionada);
                     }
                 }
         );
@@ -159,7 +178,29 @@ public class CitasController {
 
     @FXML
     private void buscarCitas() {
-        // Se implementará más adelante
+
+
+        String dni = txtBuscarDni.getText();
+
+        if (dni == null || dni.isBlank()) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Introduzca un DNI para buscar sus citas."
+            ).showAndWait();
+            return;
+        }
+
+        Paciente p = pacienteDAO.findByDni(dni);
+
+        if (p == null) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "No se ha encontrado ningún paciente con ese DNI."
+            ).showAndWait();
+
+            return;
+        }
+        cargarCitasPorPaciente(p.getIdPaciente());
     }
 
     @FXML
@@ -215,9 +256,17 @@ public class CitasController {
 
     @FXML
     private void nuevaCita() {
+
+        String dni = txtBuscarDni.getText();
+
         SceneManager.loadScene(
                 "/es/medicarte/view/nueva_cita.fxml",
-                "MedicArte - Nueva cita"
+                "MedicArte - Nueva cita",
+                controller -> {
+                    if (controller instanceof NuevaCitaController nc) {
+                        nc.setDniInicial(dni);
+                    }
+                }
         );
     }
 
@@ -288,5 +337,33 @@ public class CitasController {
                 "MedicArte - Nueva cita"
         );
     }
+
+    private void cargarCitasConCabeceras(List<Cita> lista) {
+
+        citas.clear();
+
+        YearMonth mesActual = null;
+
+        for (Cita c : lista) {
+
+            YearMonth mesCita = YearMonth.from(c.getFechaHora().toLocalDate());
+
+            if (!mesCita.equals(mesActual)) {
+                String tituloMes =
+                        mesCita.getMonth()
+                                .getDisplayName(TextStyle.FULL, new Locale("es"))
+                                .toUpperCase()
+                                + " " + mesCita.getYear();
+
+                citas.add(new ItemListaCitas(tituloMes));
+                mesActual = mesCita;
+            }
+
+            citas.add(new ItemListaCitas(c));
+        }
+
+        listCitas.setItems(citas);
+    }
+
 
 }

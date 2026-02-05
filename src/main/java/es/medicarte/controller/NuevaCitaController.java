@@ -68,8 +68,16 @@ public class NuevaCitaController {
 
         // Todos los campos del paciente deben estar bloqueados
         bloquearCamposPaciente();
+
     }
 
+    // metodo que busca el dni si viene de citas de pacientes -> ver citas
+    public void setDniInicial(String dni) {
+        if (dni != null && !dni.isBlank()) {
+            txtBuscarDni.setText(dni);
+            buscarPaciente();
+        }
+    }
     private void bloquearCamposPaciente() {
         txtApellidos.setEditable(false);
         txtNombre.setEditable(false);

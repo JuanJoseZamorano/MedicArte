@@ -62,6 +62,14 @@ public class PacientesController {
     private String fotoSeleccionadaPath;
     private boolean sololectura = false;
 
+    private static final String ESTILO_EDITABLE =
+            "-fx-background-color: rgba(206, 230, 244, 0.8);" +
+                    "-fx-border-color: #c0c0c0;" +
+                    "-fx-border-width: 1;" +
+                    "-fx-border-radius: 4;" +
+                    "-fx-background-radius: 4;";
+
+
     @FXML
     private void initialize() {
         configurarListView();
@@ -95,8 +103,11 @@ public class PacientesController {
                         pacienteSeleccionado = newVal;
                         cargarPacienteEnFormulario(newVal);
                     }
+
                 }
+
         );
+
     }
 
     // =================== CARGA DE DATOS ===================
@@ -104,6 +115,8 @@ public class PacientesController {
     private void cargarPacientes() {
         pacientes.setAll(pacienteDAO.findAll());
         listPacientes.setItems(pacientes);
+
+
     }
 
     private void cargarPacienteEnFormulario(Paciente p) {
@@ -143,6 +156,7 @@ public class PacientesController {
 
 
         btnLimpiar.setVisible(false);
+        quitarColorAlta();
     }
 
     @FXML
@@ -214,6 +228,7 @@ public class PacientesController {
             listPacientes.getSelectionModel().select(nuevo);
             pacienteSeleccionado = nuevo;
             btnLimpiar.setVisible(false);
+            quitarColorAlta();
             return;
         }
 
@@ -266,6 +281,7 @@ public class PacientesController {
             cargarPacientes();
             listPacientes.getSelectionModel().select(pacienteSeleccionado);
             btnLimpiar.setVisible(false);
+            quitarColorAlta();
         } else {
             new Alert(Alert.AlertType.ERROR, "No se pudo actualizar el paciente").showAndWait();
         }
@@ -310,6 +326,9 @@ public class PacientesController {
 
         // Quitamos selección de la lista
         listPacientes.getSelectionModel().clearSelection();
+
+        cambiarColorAlta();
+
     }
 
     @FXML
@@ -448,6 +467,72 @@ public class PacientesController {
         );
     }
 
-    public void setEditarPacientes() {
+    public void crearCita() {
+
+        if (pacienteSeleccionado == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar un paciente para crear una cita."
+            ).showAndWait();
+            return;
+        }
+
+        String dni = pacienteSeleccionado.getDni();
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/nueva_cita.fxml",
+                "MedicArte - Nueva cita",
+                controller -> {
+                    if (controller instanceof NuevaCitaController nc) {
+                        nc.setDniInicial(dni);
+                    }
+                }
+        );
     }
+
+    private void cambiarColorAlta(){
+
+        txtApellidos.setStyle(ESTILO_EDITABLE);
+        txtNombre.setStyle(ESTILO_EDITABLE);
+        dpFechaNacimiento.setStyle(ESTILO_EDITABLE);
+        cmbSexo.setStyle(ESTILO_EDITABLE);
+        txtDni.setStyle(ESTILO_EDITABLE);
+        txtNhc.setStyle(ESTILO_EDITABLE);
+        txtNuhsa.setStyle(ESTILO_EDITABLE);
+        txtNuss.setStyle(ESTILO_EDITABLE);
+        txtTelefono.setStyle(ESTILO_EDITABLE);
+        txtEmail.setStyle(ESTILO_EDITABLE);
+        txtDireccion.setStyle(ESTILO_EDITABLE);
+        txtProvincia.setStyle(ESTILO_EDITABLE);
+        txtCp.setStyle(ESTILO_EDITABLE);
+        txtAseguradora.setStyle(ESTILO_EDITABLE);
+        txtPoliza.setStyle(ESTILO_EDITABLE);
+
+
+    }
+
+    private void quitarColorAlta(){
+
+        txtApellidos.setStyle(null);
+        txtNombre.setStyle(null);
+        dpFechaNacimiento.setStyle(null);
+        cmbSexo.setStyle(null);
+        txtDni.setStyle(null);
+        txtNhc.setStyle(null);
+        txtNuhsa.setStyle(null);
+        txtNuss.setStyle(null);
+        txtTelefono.setStyle(null);
+        txtEmail.setStyle(null);
+        txtDireccion.setStyle(null);
+        txtProvincia.setStyle(null);
+        txtCp.setStyle(null);
+        txtAseguradora.setStyle(null);
+        txtPoliza.setStyle(null);
+        txtAntPersonales.setStyle(null);
+        txtAntFamiliares.setStyle(null);
+        txtTratamiento.setStyle(null);
+        txtAlergias.setStyle(null);
+
+    }
+
 }

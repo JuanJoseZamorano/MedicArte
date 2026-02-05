@@ -136,5 +136,34 @@ public class SceneManager {
         }
     }
 
+    public static void loadScene(
+            String fxml,
+            String title,
+            java.util.function.Consumer<Object> controllerConsumer
+    ) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneManager.class.getResource(fxml)
+            );
+            Parent root = loader.load();
+
+            Object controller = loader.getController();
+            if (controllerConsumer != null) {
+                controllerConsumer.accept(controller);
+            }
+
+            Scene scene = new Scene(root);
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
