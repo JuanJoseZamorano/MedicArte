@@ -185,12 +185,17 @@ public class NuevaCitaController {
 
 
 
+//    @FXML
+//    private void volver() {
+//        SceneManager.loadScene(
+//                "/es/medicarte/view/citas.fxml",
+//                "MedicArte - Citas"
+//        );
+//    }
+
     @FXML
     private void volver() {
-        SceneManager.loadScene(
-                "/es/medicarte/view/citas.fxml",
-                "MedicArte - Citas"
-        );
+        SceneManager.goBack();
     }
 
     @FXML

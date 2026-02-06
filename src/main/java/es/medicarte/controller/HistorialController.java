@@ -247,13 +247,17 @@ public class HistorialController {
         );
     }
 
-    @FXML
-    private void cancelar() {
-        SceneManager.loadScene(
-                "/es/medicarte/view/pacientes2.fxml",
-                "MedicArte - Pacientes"
-        );
-    }
+//    @FXML
+//    private void cancelar() {
+//        SceneManager.loadScene(
+//                "/es/medicarte/view/pacientes2.fxml",
+//                "MedicArte - Pacientes"
+//        );
+//    }
+@FXML
+private void cancelar() {
+    SceneManager.goBack();
+}
 
     @FXML
     private void imprimir() {

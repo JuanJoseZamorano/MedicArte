@@ -27,8 +27,7 @@
                 <Label fx:id="lblEdadSexo" text="Edad / Sexo" />
                 <Label fx:id="lblFechaHora" text="Fecha / Hora" />
                 <Label fx:id="lblEspecialidad" text="Especialidad" />
-                <ComboBox fx:id="cmbEspecialidad"
-                          prefWidth="150"/>
+                <ComboBox fx:id="cmbEspecialidad" prefWidth="150" />
                 <Label fx:id="lblEpisodio" text="Episodio" />
                 <ComboBox fx:id="cmbEpisodio" prefWidth="150.0" />
             </HBox>
@@ -115,12 +114,9 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <Button onAction="#cancelar" text="Cancelar" />
+            <Button onAction="#cancelar" text="Volver" />
             <Button onAction="#limpiarConsulta" text="Limpiar consulta" />
-            <Button fx:id="btnGrabarConsulta"
-                    text="Grabar consulta"
-                    style="-fx-text-fill: green; -fx-font-weight: bold;"
-                    onAction="#grabarConsulta"/>
+            <Button fx:id="btnGrabarConsulta" onAction="#grabarConsulta" style="-fx-text-fill: green; -fx-font-weight: bold;" text="Grabar consulta" />
         </HBox>
     </bottom>
 

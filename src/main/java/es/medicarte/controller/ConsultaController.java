@@ -294,12 +294,16 @@ public class ConsultaController {
     // =========================
     // ACCIONES
     // =========================
+//    @FXML
+//    private void cancelar() {
+//        SceneManager.loadScene(
+//                "/es/medicarte/view/citas.fxml",
+//                "MedicArte - Citas"
+//        );
+//    }
     @FXML
     private void cancelar() {
-        SceneManager.loadScene(
-                "/es/medicarte/view/citas.fxml",
-                "MedicArte - Citas"
-        );
+        SceneManager.goBack();
     }
 
     @FXML

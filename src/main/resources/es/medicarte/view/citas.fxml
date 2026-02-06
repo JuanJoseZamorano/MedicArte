@@ -33,7 +33,7 @@
 
             <Button onAction="#buscarCitas" text="Buscar" />
             <Button onAction="#filtrarPorFechas" text="Fechas" />
-            <Button onAction="#volver" text="Cancelar" />
+            <Button onAction="#volver" text="Volver" />
         </HBox>
     </top>
 

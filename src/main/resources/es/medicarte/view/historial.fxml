@@ -47,7 +47,7 @@
         <TabPane>
 
             <!-- ========== TAB GENERAL ========== -->
-            <Tab text="General">
+            <Tab closable="false" text="General">
                 <VBox spacing="10">
                     <padding>
                         <Insets bottom="10" left="10" right="10" top="10" />
@@ -70,7 +70,7 @@
             </Tab>
 
             <!-- ========== TAB EPISODIOS ========== -->
-            <Tab text="Episodios">
+            <Tab closable="false" text="Episodios">
                 <VBox spacing="10">
                     <padding>
                         <Insets bottom="10" left="10" right="10" top="10" />
@@ -107,7 +107,7 @@
         </TabPane>
     </center>
    <bottom>
-            <Button onAction="#cancelar" alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Cancelar" textAlignment="CENTER" BorderPane.alignment="TOP_RIGHT">
+            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#cancelar" text="Volver" textAlignment="CENTER" BorderPane.alignment="TOP_RIGHT">
          <BorderPane.margin>
             <Insets bottom="5.0" right="10.0" />
          </BorderPane.margin>

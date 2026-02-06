@@ -23,10 +23,10 @@ public class CitasController {
     private final PacienteDAO pacienteDAO = new PacienteDAO();
     @FXML
     private TextField txtBuscarDni;
-    @FXML
-    private TextField txtBuscarApellidos;
-    @FXML
-    private TextField txtBuscarNombre;
+//    @FXML
+//    private TextField txtBuscarApellidos;
+//    @FXML
+//    private TextField txtBuscarNombre;
     @FXML private ListView<ItemListaCitas> listCitas;
 
     private final CitaDAO citaDAO = new CitaDAO();
@@ -274,7 +274,26 @@ public class CitasController {
 
     @FXML
     private void verPaciente() {
-        // Se implementará más adelante
+
+        if (citaSeleccionada == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar una cita para ver el paciente."
+            ).showAndWait();
+            return;
+        }
+
+        int idPaciente = citaSeleccionada.getIdPaciente();
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/pacientes2.fxml",
+                "MedicArte - Pacientes",
+                controller -> {
+                    if (controller instanceof PacientesController pc) {
+                        pc.setPacienteInicial(idPaciente);
+                    }
+                }
+        );
     }
 
     @FXML
@@ -308,6 +327,14 @@ public class CitasController {
             new Alert(
                     Alert.AlertType.INFORMATION,
                     "La cita ya está cancelada."
+            ).showAndWait();
+            return;
+        }
+
+        if ("COMPLETADA".equals(citaSeleccionada.getEstado())) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "La cita ya se ha celebrado. No puede cancelarla."
             ).showAndWait();
             return;
         }
@@ -353,12 +380,17 @@ public class CitasController {
     }
 
 
+//    @FXML
+//    private void volver() {
+//        SceneManager.loadScene(
+//                "/es/medicarte/view/medico_dashboard.fxml",
+//                "MedicArte - Nueva cita"
+//        );
+//    }
+
     @FXML
     private void volver() {
-        SceneManager.loadScene(
-                "/es/medicarte/view/medico_dashboard.fxml",
-                "MedicArte - Nueva cita"
-        );
+        SceneManager.goBack();
     }
 
     private void cargarCitasConCabeceras(List<Cita> lista) {

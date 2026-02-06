@@ -11,10 +11,15 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class SceneManager {
 
     private static Stage stage;
+
+    // pila de navegacion
+    private static final Deque<Scene> history = new ArrayDeque<>();
 
     public static void setStage(Stage stage) {
         SceneManager.stage = stage;
@@ -29,8 +34,12 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxml));
             Parent root = loader.load();
 
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
+            Scene scene = new Scene(root);
             stage.setTitle(title);
-            stage.setScene(new Scene(root));
+            stage.setScene(scene);
             stage.sizeToScene();      // ajusta tamaño a la nueva vista
             stage.centerOnScreen();   // centra en pantalla
             stage.show();
@@ -55,7 +64,9 @@ public class SceneManager {
                 ((es.medicarte.controller.CitasController) controller)
                         .setIdPacienteFiltro(idPaciente);
             }
-
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.sizeToScene();      // ajusta tamaño a la nueva vista
@@ -81,7 +92,9 @@ public class SceneManager {
             if (controller instanceof ConsultaController) {
                 ((ConsultaController) controller).setCita(cita);
             }
-
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.sizeToScene();      // ajusta tamaño a la nueva vista
@@ -103,7 +116,9 @@ public class SceneManager {
             if (controller instanceof HistorialController) {
                 ((HistorialController) controller).setPaciente(paciente);
             }
-
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.sizeToScene();      // ajusta tamaño a la nueva vista
@@ -124,7 +139,9 @@ public class SceneManager {
             if (controller instanceof ConsultaController) {
                 ((ConsultaController) controller).setConsultaSoloLectura(consulta);
             }
-
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
             stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.sizeToScene();      // ajusta tamaño a la nueva vista
@@ -151,7 +168,9 @@ public class SceneManager {
             if (controllerConsumer != null) {
                 controllerConsumer.accept(controller);
             }
-
+            if (stage.getScene() != null) {
+                history.push(stage.getScene());
+            }
             Scene scene = new Scene(root);
             stage.setTitle(title);
             stage.setScene(scene);
@@ -163,7 +182,16 @@ public class SceneManager {
             e.printStackTrace();
         }
     }
+    public static void goBack() {
 
+        if (!history.isEmpty()) {
+            Scene previous = history.pop();
+            stage.setScene(previous);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+        }
+    }
 
 
 }

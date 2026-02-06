@@ -54,13 +54,16 @@ public class PacientesController {
     // ===== BOTONES =====
     @FXML
     private Button btnLimpiar;
+    @FXML
+    private Button btnFoto;
+
 
     private final PacienteDAO pacienteDAO = new PacienteDAO();
     private final ObservableList<Paciente> pacientes = FXCollections.observableArrayList();
 
     private Paciente pacienteSeleccionado;
     private String fotoSeleccionadaPath;
-    private boolean sololectura = false;
+
 
     private static final String ESTILO_EDITABLE =
             "-fx-background-color: rgba(206, 230, 244, 0.8);" +
@@ -72,11 +75,13 @@ public class PacientesController {
 
     @FXML
     private void initialize() {
+        deshabilitarEdicion();
         configurarListView();
         configurarComboSexo();
         cargarPacientes();
         configurarSeleccion();
         btnLimpiar.setVisible(false);
+
 
     }
 
@@ -108,7 +113,7 @@ public class PacientesController {
                 }
 
         );
-
+deshabilitarEdicion();
     }
 
     // =================== CARGA DE DATOS ===================
@@ -116,6 +121,7 @@ public class PacientesController {
     private void cargarPacientes() {
         pacientes.setAll(pacienteDAO.findAll());
         listPacientes.setItems(pacientes);
+        deshabilitarEdicion();
 
 
     }
@@ -158,6 +164,7 @@ public class PacientesController {
 
         btnLimpiar.setVisible(false);
         quitarColorAlta();
+        deshabilitarEdicion();
     }
 
     @FXML
@@ -230,7 +237,9 @@ public class PacientesController {
             pacienteSeleccionado = nuevo;
             btnLimpiar.setVisible(false);
             quitarColorAlta();
+
             return;
+
         }
 
     /* =========================================================
@@ -286,6 +295,7 @@ public class PacientesController {
         } else {
             new Alert(Alert.AlertType.ERROR, "No se pudo actualizar el paciente").showAndWait();
         }
+        deshabilitarEdicion();
     }
 
 
@@ -319,6 +329,7 @@ public class PacientesController {
         // Entramos en modo alta
         pacienteSeleccionado = null;
 
+
         // Limpiamos formulario
         limpiarFormulario();
 
@@ -327,7 +338,7 @@ public class PacientesController {
 
         // Quitamos selección de la lista
         listPacientes.getSelectionModel().clearSelection();
-
+        habilitarEdicion();
         cambiarColorAlta();
 
     }
@@ -376,6 +387,7 @@ public class PacientesController {
 
         listPacientes.getSelectionModel().clearSelection();
         pacienteSeleccionado = null;
+        deshabilitarEdicion();
     }
     @FXML
     private void eliminarPaciente() {
@@ -406,12 +418,17 @@ public class PacientesController {
         });
     }
 
+//    @FXML
+//    private void cancelar() {
+//        SceneManager.loadScene(
+//                "/es/medicarte/view/medico_dashboard.fxml",
+//                "MedicArte - Área Médica"
+//        );
+//    }
+
     @FXML
     private void cancelar() {
-        SceneManager.loadScene(
-                "/es/medicarte/view/medico_dashboard.fxml",
-                "MedicArte - Área Médica"
-        );
+        SceneManager.goBack();
     }
     @FXML
     private void cambiarFoto() {
@@ -491,6 +508,20 @@ public class PacientesController {
         );
     }
 
+    public void setPacienteInicial(int idPaciente) {
+
+        Paciente p = pacienteDAO.findById(idPaciente);
+
+        if (p != null) {
+            // Rellenar formulario
+            cargarPacienteEnFormulario(p);
+
+            // Seleccionar en la lista (si existe)
+            listPacientes.getSelectionModel().select(p);
+        }
+    }
+
+
     private void cambiarColorAlta(){
 
         txtApellidos.setStyle(ESTILO_EDITABLE);
@@ -508,6 +539,12 @@ public class PacientesController {
         txtCp.setStyle(ESTILO_EDITABLE);
         txtAseguradora.setStyle(ESTILO_EDITABLE);
         txtPoliza.setStyle(ESTILO_EDITABLE);
+        btnFoto.setDisable(false);
+        txtAntPersonales.setStyle(ESTILO_EDITABLE);
+        txtAntFamiliares.setStyle(ESTILO_EDITABLE);
+        txtTratamiento.setStyle(ESTILO_EDITABLE);
+        txtAlergias.setStyle(ESTILO_EDITABLE);
+
 
 
     }
@@ -533,7 +570,64 @@ public class PacientesController {
         txtAntFamiliares.setStyle(null);
         txtTratamiento.setStyle(null);
         txtAlergias.setStyle(null);
+        btnFoto.setDisable(true);
+
 
     }
 
+    private void deshabilitarEdicion(){
+        txtApellidos.setEditable(false);
+        txtNombre.setEditable(false);
+        dpFechaNacimiento.setEditable(false);
+        cmbSexo.setEditable(false);
+        txtDni.setEditable(false);
+        txtNhc.setEditable(false);
+        txtNuhsa.setEditable(false);
+        txtNuss.setEditable(false);
+        txtTelefono.setEditable(false);
+        txtEmail.setEditable(false);
+        txtDireccion.setEditable(false);
+        txtProvincia.setEditable(false);
+        txtCp.setEditable(false);
+        txtAseguradora.setEditable(false);
+        txtPoliza.setEditable(false);
+        btnFoto.setDisable(true);
+        txtAntPersonales.setEditable(false);
+        txtAntFamiliares.setEditable(false);
+        txtAlergias.setEditable(false);
+        txtTratamiento.setEditable(false);
+
+
+
+    }
+    private void habilitarEdicion(){
+        txtApellidos.setEditable(true);
+        txtNombre.setEditable(true);
+        dpFechaNacimiento.setEditable(true);
+        cmbSexo.setEditable(true);
+        txtDni.setEditable(true);
+        txtNhc.setEditable(true);
+        txtNuhsa.setEditable(true);
+        txtNuss.setEditable(true);
+        txtTelefono.setEditable(true);
+        txtEmail.setEditable(true);
+        txtDireccion.setEditable(true);
+        txtProvincia.setEditable(true);
+        txtCp.setEditable(true);
+        txtAseguradora.setEditable(true);
+        txtPoliza.setEditable(true);
+        btnFoto.setDisable(false);
+        txtAntPersonales.setEditable(true);
+        txtAntFamiliares.setEditable(true);
+        txtAlergias.setEditable(true);
+        txtTratamiento.setEditable(true);
+
+
+
+    }
+
+    public void setEditarPacientes() {
+        habilitarEdicion();
+        cambiarColorAlta();
+    }
 }
