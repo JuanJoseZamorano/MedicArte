@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -23,10 +24,15 @@ public class CitasController {
     private final PacienteDAO pacienteDAO = new PacienteDAO();
     @FXML
     private TextField txtBuscarDni;
+
 //    @FXML
 //    private TextField txtBuscarApellidos;
 //    @FXML
 //    private TextField txtBuscarNombre;
+
+    @FXML
+    private DatePicker dpFecha;
+
     @FXML private ListView<ItemListaCitas> listCitas;
 
     private final CitaDAO citaDAO = new CitaDAO();
@@ -207,7 +213,27 @@ public class CitasController {
 
     @FXML
     private void filtrarPorFechas() {
-        // Se implementará más adelante
+        LocalDate fecha = dpFecha.getValue();
+
+        if (fecha == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar una fecha."
+            ).showAndWait();
+            return;
+        }
+
+        List<Cita> lista = citaDAO.findByFecha(fecha);
+
+        if (lista.isEmpty()) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "No hay citas para la fecha seleccionada."
+            ).showAndWait();
+        }
+
+        // Usas el mismo método que ya agrupa por meses
+        cargarCitasConCabeceras(lista);
     }
 
     @FXML

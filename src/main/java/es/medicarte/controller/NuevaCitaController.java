@@ -3,9 +3,11 @@ package es.medicarte.controller;
 import es.medicarte.model.*;
 import es.medicarte.util.SceneManager;
 import es.medicarte.util.UserSession;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.util.StringConverter;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -41,15 +43,16 @@ public class NuevaCitaController {
     // DATOS DE LA CITA
     // =========================
     @FXML private DatePicker dpFechaCita;
-    @FXML private ComboBox<String> cmbMedico;
-    @FXML private Spinner<Integer> spHora;
+    @FXML private ComboBox<Medico> cmbMedico;
+    @FXML private Spinner<LocalTime> spHora;
     @FXML private TextArea txtObservaciones;
+    @FXML private TextField txtDuracion;
 
     // =========================
     // DAOs
     // =========================
     private final PacienteDAO pacienteDAO = new PacienteDAO();
-
+    private final MedicoDAO medicoDAO = new MedicoDAO();
     // =========================
     // ESTADO
     // =========================
@@ -62,12 +65,47 @@ public class NuevaCitaController {
     private void initialize() {
 
         // Spinner de hora (0–23)
-        spHora.setValueFactory(
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 9)
-        );
+        SpinnerValueFactory<LocalTime> valueFactory =
+                new SpinnerValueFactory<>() {
+
+                    {
+                        setValue(LocalTime.of(9, 0));
+                    }
+
+                    @Override
+                    public void decrement(int steps) {
+                        setValue(getValue().minusMinutes(15));
+                    }
+
+                    @Override
+                    public void increment(int steps) {
+                        setValue(getValue().plusMinutes(15));
+                    }
+                };
+
+        spHora.setValueFactory(valueFactory);
+        spHora.setEditable(true);
 
         // Todos los campos del paciente deben estar bloqueados
         bloquearCamposPaciente();
+        // Cargar médicos
+        cmbMedico.setItems(
+                FXCollections.observableArrayList(
+                        medicoDAO.findAllActivos()
+                )
+        );
+        // Cómo se muestran los médicos (texto visible)
+        cmbMedico.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Medico medico) {
+                return medico != null ? medico.getNombreApellidos() : "";
+            }
+
+            @Override
+            public Medico fromString(String string) {
+                return null; // no se usa
+            }
+        });
 
     }
 
@@ -201,9 +239,19 @@ public class NuevaCitaController {
     @FXML
     private void guardarCita() {
 
+        Medico medicoSeleccionado = cmbMedico.getValue();
+        int duracion;
         if (pacienteSeleccionado == null) {
             new Alert(Alert.AlertType.WARNING,
                     "Debe seleccionar un paciente antes de guardar la cita.")
+                    .showAndWait();
+            return;
+        }
+
+
+        if (medicoSeleccionado == null) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Debe seleccionar un médico para la cita.")
                     .showAndWait();
             return;
         }
@@ -215,7 +263,7 @@ public class NuevaCitaController {
             return;
         }
 
-        Integer hora = spHora.getValue();
+        LocalTime hora = spHora.getValue();
         if (hora == null) {
             new Alert(Alert.AlertType.WARNING,
                     "Debe seleccionar una hora para la cita.")
@@ -231,10 +279,23 @@ public class NuevaCitaController {
             return;
         }
 
-        LocalDateTime fechaHora = LocalDateTime.of(
-                dpFechaCita.getValue(),
-                LocalTime.of(hora, 0)
-        );
+        LocalDateTime fechaHora =
+                LocalDateTime.of(dpFechaCita.getValue(), hora);
+
+        try {
+            duracion = Integer.parseInt(txtDuracion.getText());
+
+            if (duracion <= 0) {
+                throw new NumberFormatException();
+            }
+
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.WARNING,
+                    "La duración debe ser un número de minutos válido.")
+                    .showAndWait();
+            return;
+        }
+
 
         Cita cita = new Cita();
         cita.setIdPaciente(pacienteSeleccionado.getIdPaciente());
@@ -242,6 +303,8 @@ public class NuevaCitaController {
         cita.setFechaHora(fechaHora);
         cita.setEstado("PENDIENTE");
         cita.setOrigen("CLINICA");
+        cita.setIdMedico(medicoSeleccionado.getIdMedico());
+        cita.setDuracionMin(duracion);
         cita.setObservaciones(txtObservaciones.getText());
 
         CitaDAO citaDAO = new CitaDAO();

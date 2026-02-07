@@ -17,22 +17,16 @@
 
     <!-- ================= BUSCADOR SUPERIOR ================= -->
     <top>
-        <HBox spacing="10">
+        <HBox alignment="TOP_RIGHT" spacing="10">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-
-            <Label text="Apellidos" />
-            <TextField fx:id="txtBuscarApellidos" />
-
-            <Label text="Nombre" />
-            <TextField fx:id="txtBuscarNombre" />
 
             <Label text="DNI" />
             <TextField fx:id="txtBuscarDni" />
 
             <Button onAction="#buscarCitas" text="Buscar" />
-            <Button onAction="#filtrarPorFechas" text="Fechas" />
+            <Button onAction="#filtrarPorFechas" text="Mostrar fecha " />
             <Button onAction="#volver" text="Volver" />
         </HBox>
     </top>
@@ -45,11 +39,11 @@
             </padding>
 
             <!-- Calendario -->
-            <DatePicker fx:id="datePickerAgenda" />
+            <DatePicker fx:id="dpFecha" />
 
             <!-- APP MÓVIL (SOLO PINTADO) -->
             <TitledPane animated="false" collapsible="false" text="Citas solicitadas por APP">
-                <ListView fx:id="listCitasApp" />
+                <ListView fx:id="listCitasApp" disable="true" />
             </TitledPane>
         </VBox>
     </left>

@@ -1,30 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="es.medicarte.controller.NuevaCitaController">
+<BorderPane prefHeight="594.0" prefWidth="794.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.medicarte.controller.NuevaCitaController">
 
     <!-- ================= BARRA SUPERIOR ================= -->
     <top>
         <HBox spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <Label text="DNI"/>
-            <TextField fx:id="txtBuscarDni" prefWidth="150"/>
-            <Button text="Buscar" onAction="#buscarPaciente"/>
+            <Label text="DNI" />
+            <TextField fx:id="txtBuscarDni" prefWidth="150" />
+            <Button onAction="#buscarPaciente" text="Buscar" />
 
 
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <Button text="Volver"  onAction="#volver"/>
+            <Button onAction="#volver" text="Volver" />
 
 
         </HBox>
@@ -34,11 +46,11 @@
     <center>
         <VBox spacing="15">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
             <!-- ===== DATOS DEL PACIENTE ===== -->
-            <TitledPane text="Datos del paciente" expanded="true" collapsible="false">
+            <TitledPane collapsible="false" expanded="true" text="Datos del paciente">
                 <GridPane prefHeight="253.0" prefWidth="596.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -87,10 +99,10 @@
 
                                                 <!-- Fila 0 -->
                                                 <Label text="Apellidos" />
-                                                <TextField fx:id="txtApellidos" maxWidth="-Infinity" prefHeight="26.0" prefWidth="212.0" GridPane.columnIndex="1" editable="false"/>
+                                                <TextField fx:id="txtApellidos" editable="false" maxWidth="-Infinity" prefHeight="26.0" prefWidth="212.0" GridPane.columnIndex="1" />
 
                                                 <Label text="Nombre" GridPane.columnIndex="2" />
-                                                <TextField fx:id="txtNombre" prefHeight="26.0" prefWidth="50.0" GridPane.columnIndex="3" editable="false"/>
+                                                <TextField fx:id="txtNombre" editable="false" prefHeight="26.0" prefWidth="50.0" GridPane.columnIndex="3" />
                                             </children>
                                         </GridPane>
                                         <GridPane GridPane.rowIndex="2">
@@ -105,7 +117,7 @@
 
                                                 <!-- Fila 5 -->
                                                 <Label text="Dirección" />
-                                                <TextField fx:id="txtDireccion" GridPane.columnIndex="1" editable="false"/>
+                                                <TextField fx:id="txtDireccion" editable="false" GridPane.columnIndex="1" />
                                             </children>
                                         </GridPane>
                                         <GridPane GridPane.rowIndex="1">
@@ -124,14 +136,14 @@
 
                                                 <!-- Fila 1 -->
                                                 <Label prefHeight="18.0" prefWidth="70.0" text="Fecha Nac." />
-                                                <DatePicker fx:id="dpFechaNacimiento" prefHeight="26.0" prefWidth="75.0" GridPane.columnIndex="1" disable="true"/>
+                                                <DatePicker fx:id="dpFechaNacimiento" disable="true" prefHeight="26.0" prefWidth="75.0" GridPane.columnIndex="1" />
 
                                                 <Label text="Sexo" GridPane.columnIndex="2" />
-                                                <ComboBox fx:id="cmbSexo" prefHeight="26.0" prefWidth="76.0" GridPane.columnIndex="3" disable="true"/>
+                                                <ComboBox fx:id="cmbSexo" disable="true" prefHeight="26.0" prefWidth="76.0" GridPane.columnIndex="3" />
 
                                                 <!-- Fila 2 -->
                                                 <Label text="DNI" GridPane.columnIndex="4" />
-                                                <TextField fx:id="txtDni" GridPane.columnIndex="5" editable="false"/>
+                                                <TextField fx:id="txtDni" editable="false" GridPane.columnIndex="5" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -155,35 +167,35 @@
                             <children>
 
                                 <Label text="NHC" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtNhc" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
+                                <TextField fx:id="txtNhc" editable="false" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                                 <!-- Fila 3 -->
                                 <Label text="NUHSA" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtNuhsa" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" GridPane.rowIndex="1" editable="false"/>
+                                <TextField fx:id="txtNuhsa" editable="false" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
                                 <Label text="NUSS" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtNuss" GridPane.columnIndex="5" GridPane.rowIndex="1" editable="false"/>
+                                <TextField fx:id="txtNuss" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
 
                                 <Label text="Provincia" />
-                                <TextField fx:id="txtProvincia" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" editable="false"/>
+                                <TextField fx:id="txtProvincia" editable="false" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" />
 
                                 <!-- Fila 6 -->
                                 <Label text="C.P." GridPane.columnIndex="2" />
-                                <TextField fx:id="txtCp" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" editable="false"/>
+                                <TextField fx:id="txtCp" editable="false" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="3" />
 
                                 <Label text="Email" GridPane.columnIndex="4" />
-                                <TextField fx:id="txtEmail" GridPane.columnIndex="5" editable="false"/>
+                                <TextField fx:id="txtEmail" editable="false" GridPane.columnIndex="5" />
 
                                 <Label text="Aseguradora" GridPane.rowIndex="2" />
-                                <TextField fx:id="txtAseguradora" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false"/>
+                                <TextField fx:id="txtAseguradora" editable="false" maxWidth="-Infinity" prefWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                                 <!-- Fila 7 -->
                                 <Label text="Nº Póliza" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                <TextField fx:id="txtPoliza" maxWidth="-Infinity" prefWidth="124.0" GridPane.columnIndex="3" GridPane.rowIndex="2" editable="false"/>
+                                <TextField fx:id="txtPoliza" editable="false" maxWidth="-Infinity" prefWidth="124.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
                                 <!-- Fila 4 -->
                                 <Label text="Teléfono" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                <TextField fx:id="txtTelefono" GridPane.columnIndex="5" GridPane.rowIndex="2" editable="false"/>
+                                <TextField fx:id="txtTelefono" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
                     </children>
@@ -194,35 +206,52 @@
             <HBox spacing="20">
 
                 <!-- CALENDARIO -->
-                <DatePicker fx:id="dpFechaCita"/>
+                <DatePicker fx:id="dpFechaCita" />
 
                 <!-- DATOS -->
-                <GridPane hgap="10" vgap="10">
+                <GridPane hgap="10" prefHeight="190.0" prefWidth="551.0" vgap="10">
 
-                    <Label text="Médico"/>
-                    <ComboBox fx:id="cmbMedico" GridPane.columnIndex="1"/>
+                    <Label text="Médico" />
+                    <ComboBox fx:id="cmbMedico" GridPane.columnIndex="1" />
 
-                    <Label text="Hora" GridPane.rowIndex="1"/>
-                    <Spinner fx:id="spHora" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Hora" GridPane.rowIndex="1" />
 
-                    <Label text="Observaciones" GridPane.rowIndex="2"/>
-                    <TextArea fx:id="txtObservaciones"
-                              GridPane.rowIndex="2"
-                              GridPane.columnIndex="1"
-                              prefRowCount="4"/>
+                    <Label text="Observaciones" GridPane.rowIndex="2" />
+                    <TextArea fx:id="txtObservaciones" prefRowCount="4" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                    <CheckBox text="Notificación APP"
-                              GridPane.rowIndex="3"
-                              GridPane.columnIndex="1"/>
+                    <CheckBox text="Notificación APP" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                 <columnConstraints>
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="197.59996032714844" minWidth="10.0" prefWidth="197.59996032714844" />
+                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.20001220703125" minWidth="10.0" prefWidth="63.99998779296877" />
+                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.199951171875" minWidth="10.0" prefWidth="218.40001220703124" />
+                 </columnConstraints>
+                 <rowConstraints>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                 </rowConstraints>
+                  <children>
+                          <Spinner fx:id="spHora" />
+                     <TextField fx:id="txtDuracion" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="124.0" GridPane.columnIndex="2" />
+                     <Label text="Duración" GridPane.columnIndex="1" />
+                  </children>
+               </GridPane>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
                 </GridPane>
 
             </HBox>
 
             <!-- ===== BOTÓN GUARDAR ===== -->
             <HBox alignment="CENTER_RIGHT">
-                <Button text="+ GUARDAR CITA"
-                        style="-fx-text-fill: green; -fx-font-weight: bold;"
-                        onAction="#guardarCita"/>
+                <Button onAction="#guardarCita" style="-fx-text-fill: green; -fx-font-weight: bold;" text="+ GUARDAR CITA" />
 
 
             </HBox>

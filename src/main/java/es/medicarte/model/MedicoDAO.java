@@ -5,6 +5,8 @@ import es.medicarte.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MedicoDAO {
 
@@ -64,5 +66,33 @@ public class MedicoDAO {
 
         return null;
     }
+
+    public List<Medico> findAllActivos() {
+
+        String sql = "SELECT * FROM medicarte.medico WHERE activo = true ORDER BY nombre_apellidos";
+
+        List<Medico> lista = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Medico m = new Medico();
+                m.setIdMedico(rs.getInt("id_medico"));
+                m.setNombreApellidos(rs.getString("nombre_apellidos"));
+                m.setNumColegiado(rs.getString("num_colegiado"));
+                m.setIdEspecialidad(rs.getInt("id_especialidad"));
+                m.setActivo(rs.getBoolean("activo"));
+                lista.add(m);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
 
 }

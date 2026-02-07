@@ -3,6 +3,7 @@ package es.medicarte.model;
 import es.medicarte.util.DatabaseConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +193,34 @@ public class CitaDAO {
         }
 
         return null;
+    }
+    public List<Cita> findByFecha(LocalDate fecha) {
+
+        String sql = """
+        SELECT *
+        FROM medicarte.cita
+        WHERE DATE(fecha_hora) = ?
+        ORDER BY fecha_hora
+        """;
+
+        List<Cita> resultado = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDate(1, java.sql.Date.valueOf(fecha));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(mapResultSet(rs));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return resultado;
     }
 
 
