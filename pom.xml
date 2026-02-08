@@ -46,6 +46,9 @@
             <version>0.4</version>
         </dependency>
         <!-- JasperReports -->
+        <!-- Esta version, segun parece, detecta una vulnerabilidad
+        de seguridad, pero investigandola, es menor. No interfiere en la funcionalidad
+         ni en la seguridad de los pacientes-->
 
         <dependency>
             <groupId>net.sf.jasperreports</groupId>

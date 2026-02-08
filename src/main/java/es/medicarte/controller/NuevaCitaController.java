@@ -2,7 +2,6 @@ package es.medicarte.controller;
 
 import es.medicarte.model.*;
 import es.medicarte.util.SceneManager;
-import es.medicarte.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -53,11 +52,12 @@ public class NuevaCitaController {
     // =========================
     private final PacienteDAO pacienteDAO = new PacienteDAO();
     private final MedicoDAO medicoDAO = new MedicoDAO();
+    private final CitaDAO citaDAO = new CitaDAO();
     // =========================
     // ESTADO
     // =========================
     private Paciente pacienteSeleccionado;
-
+    private Cita citaEnEdicion = null;
     // =========================
     // INITIALIZE
     // =========================
@@ -222,7 +222,7 @@ public class NuevaCitaController {
 
 
 
-
+// Volver anterior antes de crear la pila de navegacion.
 //    @FXML
 //    private void volver() {
 //        SceneManager.loadScene(
@@ -239,88 +239,140 @@ public class NuevaCitaController {
     @FXML
     private void guardarCita() {
 
-        Medico medicoSeleccionado = cmbMedico.getValue();
-        int duracion;
-        if (pacienteSeleccionado == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Debe seleccionar un paciente antes de guardar la cita.")
-                    .showAndWait();
+        if (!validarFormulario()) {
             return;
         }
+        if (citaEnEdicion == null) {
+            crearNuevaCita();
+        } else {
+            actualizarCitaExistente();
+        }
+    }
 
+    public void setCitaParaEdicion(Cita cita) {
 
-        if (medicoSeleccionado == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Debe seleccionar un médico para la cita.")
-                    .showAndWait();
-            return;
+        this.citaEnEdicion = cita;
+
+        // Cargar paciente
+        Paciente p = pacienteDAO.findById(cita.getIdPaciente());
+        if (p != null) {
+            txtBuscarDni.setText(p.getDni());
+            cargarPacienteEnFormulario(p);
+            txtBuscarDni.setDisable(true);
+        }
+
+        // Cargar fecha y hora
+        dpFechaCita.setValue(
+                cita.getFechaHora().toLocalDate()
+        );
+
+        // hora
+
+        LocalTime hora = cita.getFechaHora()
+                .toLocalTime()
+                .withSecond(0)
+                .withNano(0);
+
+        spHora.getValueFactory().setValue(hora);
+
+        // Duración
+        if (cita.getDuracionMin() != null) {
+            txtDuracion.setText(String.valueOf(cita.getDuracionMin()));
+        }
+
+        // Observaciones
+        txtObservaciones.setText(cita.getObservaciones());
+
+        // Médico
+        Medico medico = medicoDAO.findById(cita.getIdMedico());
+        if (medico != null) {
+            cmbMedico.setValue(medico);
+        }
+    }
+
+    private boolean validarFormulario() {
+
+        if (pacienteSeleccionado == null) {
+            mostrarWarning("Debe seleccionar un paciente.");
+            return false;
+        }
+
+        if (cmbMedico.getValue() == null) {
+            mostrarWarning("Debe seleccionar un médico para la cita.");
+            return false;
         }
 
         if (dpFechaCita.getValue() == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Debe seleccionar una fecha para la cita.")
-                    .showAndWait();
-            return;
+            mostrarWarning("Debe seleccionar una fecha para la cita.");
+            return false;
         }
 
-        LocalTime hora = spHora.getValue();
-        if (hora == null) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Debe seleccionar una hora para la cita.")
-                    .showAndWait();
-            return;
+        if (spHora.getValue() == null) {
+            mostrarWarning("Debe seleccionar una hora para la cita.");
+            return false;
         }
 
-        Usuario usuario = UserSession.getUsuario();
-        if (usuario == null || usuario.getIdMedico() == null) {
-            new Alert(Alert.AlertType.ERROR,
-                    "No se ha podido identificar al médico logueado.")
-                    .showAndWait();
-            return;
-        }
 
-        LocalDateTime fechaHora =
-                LocalDateTime.of(dpFechaCita.getValue(), hora);
 
         try {
-            duracion = Integer.parseInt(txtDuracion.getText());
-
+            int duracion = Integer.parseInt(txtDuracion.getText());
             if (duracion <= 0) {
                 throw new NumberFormatException();
             }
-
         } catch (Exception e) {
-            new Alert(Alert.AlertType.WARNING,
-                    "La duración debe ser un número de minutos válido.")
-                    .showAndWait();
-            return;
+            mostrarWarning("La duración debe ser un número de minutos válido.");
+            return false;
         }
 
+        return true;
+    }
+
+    private void mostrarWarning(String msg) {
+        new Alert(Alert.AlertType.WARNING, msg).showAndWait();
+    }
+
+    private void crearNuevaCita() {
 
         Cita cita = new Cita();
         cita.setIdPaciente(pacienteSeleccionado.getIdPaciente());
-        cita.setIdMedico(usuario.getIdMedico());
-        cita.setFechaHora(fechaHora);
+        cita.setIdMedico(cmbMedico.getValue().getIdMedico());
+        cita.setFechaHora(
+                LocalDateTime.of(dpFechaCita.getValue(), spHora.getValue())
+        );
+        cita.setDuracionMin(Integer.parseInt(txtDuracion.getText()));
+        cita.setObservaciones(txtObservaciones.getText());
         cita.setEstado("PENDIENTE");
         cita.setOrigen("CLINICA");
-        cita.setIdMedico(medicoSeleccionado.getIdMedico());
-        cita.setDuracionMin(duracion);
-        cita.setObservaciones(txtObservaciones.getText());
 
-        CitaDAO citaDAO = new CitaDAO();
         boolean ok = citaDAO.insert(cita);
 
-        if (!ok) {
-            new Alert(Alert.AlertType.ERROR,
-                    "No se pudo guardar la cita.")
+        if (ok) {
+            new Alert(Alert.AlertType.INFORMATION,
+                    "La cita ha sido creada correctamente.")
                     .showAndWait();
-            return;
+            SceneManager.goBack();
         }
-
-        SceneManager.loadScene(
-                "/es/medicarte/view/citas.fxml",
-                "MedicArte - Citas"
-        );
     }
+    private void actualizarCitaExistente() {
+
+        citaEnEdicion.setIdMedico(cmbMedico.getValue().getIdMedico());
+        citaEnEdicion.setFechaHora(
+                LocalDateTime.of(dpFechaCita.getValue(), spHora.getValue())
+        );
+        citaEnEdicion.setDuracionMin(Integer.parseInt(txtDuracion.getText()));
+        citaEnEdicion.setObservaciones(txtObservaciones.getText());
+
+        boolean ok = citaDAO.update(citaEnEdicion);
+
+        if (ok) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "La cita ha sido modificada correctamente."
+            ).showAndWait();
+            SceneManager.goBack();
+        }
+    }
+
+
 
 }

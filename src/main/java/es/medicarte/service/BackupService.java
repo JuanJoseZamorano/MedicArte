@@ -13,7 +13,7 @@ public class BackupService {
             "\"C:\\Program Files\\PostgreSQL\\18\\bin\\pg_dump.exe\"";
     private static final String PSQL =
             "\"C:\\Program Files\\PostgreSQL\\18\\bin\\psql.exe\"";
-    // Ajusta estos valores si hace falta
+
     private static final String DB_NAME = "MedicArte";
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "Erkenenpostgres23";

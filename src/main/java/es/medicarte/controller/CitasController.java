@@ -243,7 +243,32 @@ public class CitasController {
 
     @FXML
     private void editarCita() {
-        // Se implementará más adelante
+
+        if (citaSeleccionada == null) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar una cita para editarla."
+            ).showAndWait();
+            return;
+        }
+
+        if (!"PENDIENTE".equals(citaSeleccionada.getEstado())) {
+            new Alert(
+                    Alert.AlertType.INFORMATION,
+                    "Solo se pueden editar citas pendientes."
+            ).showAndWait();
+            return;
+        }
+
+        SceneManager.loadScene(
+                "/es/medicarte/view/nueva_cita.fxml",
+                "MedicArte - Editar cita",
+                controller -> {
+                    if (controller instanceof NuevaCitaController nc) {
+                        nc.setCitaParaEdicion(citaSeleccionada);
+                    }
+                }
+        );
     }
 
 

@@ -223,5 +223,34 @@ public class CitaDAO {
         return resultado;
     }
 
+    public boolean update(Cita cita) {
+
+        String sql = """
+        UPDATE medicarte.cita
+        SET id_medico = ?,
+            fecha_hora = ?,
+            duracion_min = ?,
+            observaciones = ?
+        WHERE id_cita = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, cita.getIdMedico());
+            ps.setTimestamp(2, Timestamp.valueOf(cita.getFechaHora()));
+            ps.setInt(3, cita.getDuracionMin());
+            ps.setString(4, cita.getObservaciones());
+            ps.setInt(5, cita.getIdCita());
+
+            return ps.executeUpdate() == 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
 }

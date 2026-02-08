@@ -22,11 +22,16 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
+            <!-- Calendario -->
+            <DatePicker fx:id="dpFecha" />
+            <Button onAction="#filtrarPorFechas" text="Mostrar fecha " />
+         <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
+
             <Label text="DNI" />
             <TextField fx:id="txtBuscarDni" />
 
             <Button onAction="#buscarCitas" text="Buscar" />
-            <Button onAction="#filtrarPorFechas" text="Mostrar fecha " />
+         <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="7.0" />
             <Button onAction="#volver" text="Volver" />
         </HBox>
     </top>
@@ -37,9 +42,6 @@
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-
-            <!-- Calendario -->
-            <DatePicker fx:id="dpFecha" />
 
             <!-- APP MÓVIL (SOLO PINTADO) -->
             <TitledPane animated="false" collapsible="false" text="Citas solicitadas por APP">
