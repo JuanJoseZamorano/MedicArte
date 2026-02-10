@@ -8,11 +8,21 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a datos
+ * de los médicos del sistema.
+ */
 public class MedicoDAO {
 
     private static final String SELECT_BY_ID =
             "SELECT * FROM medicarte.medico WHERE id_medico = ?";
 
+    /**
+     * Busca un médico por su identificador.
+     *
+     * @param idMedico Identificador del médico
+     * @return Médico encontrado o null si no existe
+     */
     public Medico findById(int idMedico) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -37,6 +47,13 @@ public class MedicoDAO {
         return null;
     }
 
+    /**
+     * Inserta un nuevo médico en la base de datos.
+     * Devuelve el identificador generado automáticamente.
+     *
+     * @param medico Médico a insertar
+     * @return id del médico creado o null si falla
+     */
     public Integer insert(Medico medico) {
 
         String sql = """
@@ -67,9 +84,17 @@ public class MedicoDAO {
         return null;
     }
 
+    /**
+     * Devuelve la lista de médicos activos.
+     * Se utiliza, por ejemplo, al asignar médicos a una cita.
+     *
+     * @return Lista de médicos activos
+     */
     public List<Medico> findAllActivos() {
 
-        String sql = "SELECT * FROM medicarte.medico WHERE activo = true ORDER BY nombre_apellidos";
+        String sql =
+                "SELECT * FROM medicarte.medico " +
+                        "WHERE activo = true ORDER BY nombre_apellidos";
 
         List<Medico> lista = new ArrayList<>();
 
@@ -93,6 +118,5 @@ public class MedicoDAO {
 
         return lista;
     }
-
-
 }
+

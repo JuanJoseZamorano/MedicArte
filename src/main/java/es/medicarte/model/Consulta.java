@@ -2,14 +2,29 @@ package es.medicarte.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Clase modelo que representa una consulta médica.
+ * Una consulta pertenece a un episodio clínico y puede
+ * estar asociada opcionalmente a una cita previa.
+ */
 public class Consulta {
 
+    // Identificador único de la consulta
     private int idConsulta;
+
+    // Episodio clínico al que pertenece la consulta
     private int idEpisodio;
+
+    // Médico que realiza la consulta
     private int idMedico;
+
+    // Cita asociada (puede ser null si no procede de cita)
     private Integer idCita;
+
+    // Fecha y hora en la que se realiza la consulta
     private LocalDateTime fechaHora;
 
+    // Datos clínicos de la consulta
     private String motivoConsulta;
     private String anamnesis;
     private String exploracion;
@@ -17,6 +32,8 @@ public class Consulta {
     private String diagnosticoCod;
     private String tratamiento;
     private String observaciones;
+
+    // Estado de la consulta (BORRADOR / FINALIZADA)
     private String estado;
 
     // ===== GETTERS & SETTERS =====
@@ -125,3 +142,4 @@ public class Consulta {
         this.estado = estado;
     }
 }
+

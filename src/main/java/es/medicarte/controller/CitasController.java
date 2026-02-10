@@ -70,7 +70,8 @@ public class CitasController {
 
     public void setIdPacienteFiltro(Integer idPaciente) {
         this.idPacienteFiltro = idPaciente;
-        System.out.println("Filtro recibido: " + idPaciente);
+        // Teste para ver que filtro aplica
+        // System.out.println("Filtro recibido: " + idPaciente);
         if (idPacienteFiltro != null) {
             // cargarCitasPorPaciente(idPacienteFiltro);
             prepararVistaFiltradaPorPaciente();

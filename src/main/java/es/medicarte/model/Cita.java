@@ -2,21 +2,43 @@ package es.medicarte.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Clase modelo que representa una cita médica.
+ * Una cita puede derivar posteriormente en una consulta.
+ */
 public class Cita {
 
+    // Identificador único de la cita
     private int idCita;
+
+    // Paciente al que pertenece la cita
     private int idPaciente;
+
+    // Médico asignado a la cita
     private int idMedico;
+
+    // Fecha y hora programada para la cita
     private LocalDateTime fechaHora;
+
+    // Estado de la cita (PENDIENTE / CANCELADA / COMPLETADA)
     private String estado;
+
+    // Origen de la cita (CLINICA / APP)
     private String origen;
+
+    // Observaciones asociadas a la cita
     private String observaciones;
+
+    // Duración estimada de la cita en minutos
     private Integer duracionMin;
 
     public Cita() {
     }
 
-    // Constructor para crear cita
+    /**
+     * Constructor utilizado al crear una nueva cita desde la aplicación.
+     * Inicializa los valores por defecto.
+     */
     public Cita(int idPaciente, int idMedico, LocalDateTime fechaHora,
                 String observaciones, Integer duracionMin) {
 
@@ -95,4 +117,3 @@ public class Cita {
         this.duracionMin = duracionMin;
     }
 }
-

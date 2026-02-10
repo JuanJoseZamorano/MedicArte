@@ -4,10 +4,13 @@ import es.medicarte.util.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a datos
+ * de las citas médicas.
+ */
 public class CitaDAO {
 
     private static final String INSERT_SQL =
@@ -30,7 +33,7 @@ public class CitaDAO {
             "UPDATE medicarte.cita SET estado = 'COMPLETADA' WHERE id_cita = ?";
 
     /**
-     * Inserta una nueva cita
+     * Inserta una nueva cita en la base de datos.
      */
     public boolean insert(Cita c) {
 
@@ -54,7 +57,7 @@ public class CitaDAO {
     }
 
     /**
-     * Obtiene las citas de un paciente
+     * Obtiene las citas de un paciente concreto.
      */
     public List<Cita> findByPaciente(int idPaciente) {
 
@@ -78,6 +81,9 @@ public class CitaDAO {
         return citas;
     }
 
+    /**
+     * Mapea un ResultSet a un objeto Cita.
+     */
     private Cita mapResultSet(ResultSet rs) throws SQLException {
 
         Cita c = new Cita();
@@ -98,6 +104,10 @@ public class CitaDAO {
 
         return c;
     }
+
+    /**
+     * Obtiene todas las citas del sistema.
+     */
     public List<Cita> findAll() {
 
         List<Cita> lista = new ArrayList<>();
@@ -116,8 +126,9 @@ public class CitaDAO {
 
         return lista;
     }
+
     /**
-     * Se marca cita como cancelada
+     * Marca una cita como cancelada.
      */
     public boolean cancelarCita(int idCita) {
 
@@ -132,6 +143,10 @@ public class CitaDAO {
             return false;
         }
     }
+
+    /**
+     * Marca una cita como completada tras pasar a consulta.
+     */
     public boolean completarCita(int idCita) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -145,6 +160,10 @@ public class CitaDAO {
             return false;
         }
     }
+
+    /**
+     * Cuenta el número de citas pendientes para el día actual.
+     */
     public int countCitasPendientesHoy() {
 
         String sql = """
@@ -169,6 +188,9 @@ public class CitaDAO {
         return 0;
     }
 
+    /**
+     * Obtiene la próxima cita pendiente posterior al momento actual.
+     */
     public Cita findProximaCitaPendiente() {
 
         String sql = """
@@ -194,6 +216,10 @@ public class CitaDAO {
 
         return null;
     }
+
+    /**
+     * Obtiene las citas asociadas a una fecha concreta.
+     */
     public List<Cita> findByFecha(LocalDate fecha) {
 
         String sql = """
@@ -208,7 +234,7 @@ public class CitaDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setDate(1, java.sql.Date.valueOf(fecha));
+            ps.setDate(1, Date.valueOf(fecha));
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -223,6 +249,10 @@ public class CitaDAO {
         return resultado;
     }
 
+    /**
+     * Actualiza los datos básicos de una cita existente.
+     * Se utiliza al editar una cita.
+     */
     public boolean update(Cita cita) {
 
         String sql = """
@@ -251,6 +281,4 @@ public class CitaDAO {
 
         return false;
     }
-
-
 }

@@ -5,6 +5,10 @@ import es.medicarte.util.DatabaseConnection;
 import java.sql.*;
 import java.time.LocalDate;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a la tabla
+ * historia_clinica de la base de datos.
+ */
 public class HistoriaDAO {
 
     private static final String SELECT_BY_PACIENTE =
@@ -19,12 +23,15 @@ public class HistoriaDAO {
     /**
      * Obtiene la historia clínica de un paciente.
      * Si no existe, la crea automáticamente.
+     *
+     * Este enfoque garantiza que siempre exista una historia clínica
+     * antes de crear episodios o consultas.
      */
     public HistoriaClinica findOrCreateByPaciente(int idPaciente) {
 
         try (Connection conn = DatabaseConnection.getConnection()) {
 
-            // 1️⃣ Intentar obtener historia existente
+            // 1️⃣ Intentar obtener la historia clínica existente
             try (PreparedStatement ps = conn.prepareStatement(SELECT_BY_PACIENTE)) {
                 ps.setInt(1, idPaciente);
 
@@ -43,7 +50,7 @@ public class HistoriaDAO {
                 }
             }
 
-            // 2️⃣ Si no existe, crearla
+            // 2️⃣ Si no existe, se crea automáticamente
             try (PreparedStatement ps = conn.prepareStatement(INSERT_HISTORIA)) {
                 ps.setInt(1, idPaciente);
                 ps.setDate(2, Date.valueOf(LocalDate.now()));
@@ -66,9 +73,17 @@ public class HistoriaDAO {
 
         return null;
     }
+
+    /**
+     * Obtiene una historia clínica a partir de su identificador.
+     *
+     * @param idHistoria Identificador de la historia clínica
+     * @return Historia clínica encontrada o null si no existe
+     */
     public HistoriaClinica findById(int idHistoria) {
 
-        String sql = "SELECT * FROM medicarte.historia_clinica WHERE id_historia = ?";
+        String sql =
+                "SELECT * FROM medicarte.historia_clinica WHERE id_historia = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -95,5 +110,5 @@ public class HistoriaDAO {
 
         return null;
     }
-
 }
+

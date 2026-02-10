@@ -1,28 +1,36 @@
 package es.medicarte.model;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+import java.time.LocalDate;
+
+/**
+ * Clase que representa un episodio clínico.
+ * Un episodio agrupa una o varias consultas dentro
+ * de una misma historia clínica y especialidad.
+ */
 public class Episodio {
 
+    // Identificador único del episodio
     private int idEpisodio;
+
+    // Identificador de la historia clínica a la que pertenece
     private int idHistoria;
+
+    // Identificador de la especialidad asociada al episodio
     private int idEspecialidad;
+
+    // Motivo o descripción del episodio clínico
     private String motivo;
+
+    // Estado del episodio (ABIERTO / CERRADO)
     private String estado;
+
+    // Fecha de inicio del episodio
     private LocalDate fechaInicio;
 
     // ===== GETTERS & SETTERS =====
 
     public int getIdEpisodio() {
         return idEpisodio;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
     }
 
     public void setIdEpisodio(int idEpisodio) {
@@ -61,6 +69,18 @@ public class Episodio {
         this.estado = estado;
     }
 
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    /**
+     * Se sobrescribe toString para mostrar correctamente
+     * el episodio en ComboBox.
+     */
     @Override
     public String toString() {
         return motivo + " (" + estado + ")";

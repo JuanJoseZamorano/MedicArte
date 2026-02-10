@@ -6,6 +6,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Clase DAO encargada de gestionar la configuración
+ * general de la aplicación mediante pares clave-valor.
+ */
 public class ConfiguracionDAO {
 
     private static final String SELECT_SQL =
@@ -18,7 +22,10 @@ public class ConfiguracionDAO {
             "UPDATE medicarte.configuracion SET valor = ? WHERE clave = ?";
 
     /**
-     * Obtiene el valor asociado a una clave de configuración
+     * Obtiene el valor asociado a una clave de configuración.
+     *
+     * @param clave Clave de configuración
+     * @return Valor asociado o null si no existe
      */
     public String getValor(String clave) {
 
@@ -41,15 +48,19 @@ public class ConfiguracionDAO {
     }
 
     /**
-     * Inserta o actualiza una clave de configuración
+     * Inserta o actualiza una clave de configuración.
+     * Si la clave existe se actualiza, si no, se crea.
+     *
+     * @param clave Clave de configuración
+     * @param valor Valor a almacenar
      */
     public void setValor(String clave, String valor) {
 
         try (Connection conn = DatabaseConnection.getConnection()) {
 
-            // Comprobamos si ya existe
             boolean existe;
 
+            // Comprobamos si la clave ya existe
             try (PreparedStatement ps = conn.prepareStatement(SELECT_SQL)) {
                 ps.setString(1, clave);
                 try (ResultSet rs = ps.executeQuery()) {

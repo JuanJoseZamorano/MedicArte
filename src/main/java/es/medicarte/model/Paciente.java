@@ -3,9 +3,16 @@ package es.medicarte.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Clase modelo que representa a un paciente del sistema.
+ * Contiene tanto datos personales como información clínica básica.
+ */
 public class Paciente {
 
+    // Identificador único del paciente en la base de datos
     private int idPaciente;
+
+    // Datos personales
     private String dni;
     private String nombre;
     private String apellidos;
@@ -16,23 +23,35 @@ public class Paciente {
     private String direccion;
     private String provincia;
     private String cp;
+
+    // Datos administrativos
     private String aseguradora;
     private String numPoliza;
     private String nuhsa;
     private String nuss;
     private String nhc;
+
+    // Datos clínicos básicos
     private String grupoSanguineo;
     private String alergias;
     private String antecedentesPersonales;
     private String antecedentesFamiliares;
     private String tratamientoActual;
+
+    // Fecha de creación del registro
     private LocalDateTime creadoEn;
+
+    // Ruta de la foto del paciente
     private String fotoPath;
 
+    // Constructor vacío requerido para mapeos desde JDBC
     public Paciente() {
     }
 
-    // Constructor para inserción (sin id ni fecha de creación)
+    /**
+     * Constructor utilizado para la inserción de nuevos pacientes.
+     * No incluye el id ni la fecha de creación, ya que los genera la base de datos.
+     */
     public Paciente(String dni, String nombre, String apellidos,
                     LocalDate fechaNacimiento, String sexo,
                     String telefono, String email,
@@ -242,9 +261,11 @@ public class Paciente {
     public void setCreadoEn(LocalDateTime creadoEn) {
         this.creadoEn = creadoEn;
     }
+
     public String getFotoPath() {
         return fotoPath;
     }
+
     public void setFotoPath(String fotoPath) {
         this.fotoPath = fotoPath;
     }

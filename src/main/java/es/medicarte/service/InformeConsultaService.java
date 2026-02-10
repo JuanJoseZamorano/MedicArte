@@ -13,31 +13,48 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Servicio encargado de generar informes clínicos en formato PDF
+ * a partir de una consulta médica.
+ *
+ * Utiliza JasperReports como motor de generación de informes.
+ */
 public class InformeConsultaService {
 
     /**
-     * Genera un informe clínico en PDF a partir de una consulta
+     * Genera un informe clínico en PDF a partir de una consulta.
+     * El informe se crea usando una plantilla JRXML y se rellena
+     * con los datos del paciente, la consulta, el episodio y la clínica.
+     *
+     * @param consulta Consulta médica a partir de la cual se genera el informe
      */
     public static void generarPdfConsulta(Consulta consulta) {
+
         ConfiguracionDAO configuracionDAO = new ConfiguracionDAO();
+
         try {
             // =========================
             // CARGAR PLANTILLA JRXML
             // =========================
+
             InputStream reportStream =
                     InformeConsultaService.class
                             .getResourceAsStream("/report/informe_consulta.jrxml");
 
             if (reportStream == null) {
-                throw new RuntimeException("No se encuentra el informe informe_consulta.jrxml");
+                throw new RuntimeException(
+                        "No se encuentra el informe informe_consulta.jrxml"
+                );
             }
 
+            // Compilación de la plantilla JasperReports
             JasperReport jasperReport =
                     JasperCompileManager.compileReport(reportStream);
 
             // =========================
             // DAOs
             // =========================
+
             EpisodioDAO episodioDAO = new EpisodioDAO();
             HistoriaDAO historiaDAO = new HistoriaDAO();
             PacienteDAO pacienteDAO = new PacienteDAO();
@@ -47,6 +64,8 @@ public class InformeConsultaService {
             // =========================
             // RECONSTRUIR CONTEXTO
             // =========================
+
+            // A partir de la consulta se recupera toda la información relacionada
             Episodio episodio = episodioDAO.findById(consulta.getIdEpisodio());
             HistoriaClinica historia = historiaDAO.findById(episodio.getIdHistoria());
             Paciente paciente = pacienteDAO.findById(historia.getIdPaciente());
@@ -56,18 +75,25 @@ public class InformeConsultaService {
             // =========================
             // MAPA DE PARÁMETROS
             // =========================
+
+            // Mapa que contiene todos los parámetros que se pasan al informe
             Map<String, Object> params = new HashMap<>();
 
             // ---------- DATOS CLÍNICA ----------
-            String nombreClinica = configuracionDAO.getValor("NOMBRE_CLINICA");
+
+            String nombreClinica =
+                    configuracionDAO.getValor("NOMBRE_CLINICA");
 
             params.put(
                     "NOMBRE_CLINICA",
                     nombreClinica != null ? nombreClinica : "MedicArte"
             );
+
+            // Datos fijos de la clínica (no configurables en esta versión)
             params.put("DIRECCION_CLINICA", "C/ Ejemplo 123");
             params.put("TELEFONO_CLINICA", "955 123 456");
 
+            // Carga del logo de la clínica desde la configuración
             String logoPath = configuracionDAO.getValor("LOGO_CLINICA");
             InputStream logoStream = null;
 
@@ -78,7 +104,7 @@ public class InformeConsultaService {
                 }
             }
 
-// Si no hay logo configurado o falla, usar logo por defecto
+            // Si no hay logo configurado, se utiliza uno por defecto
             if (logoStream == null) {
                 logoStream = InformeConsultaService.class
                         .getResourceAsStream("/report/logo.png");
@@ -87,15 +113,22 @@ public class InformeConsultaService {
             params.put("LOGO_CLINICA", logoStream);
 
             // ---------- DATOS PACIENTE ----------
-            params.put("PACIENTE_NOMBRE",
-                    paciente.getApellidos() + ", " + paciente.getNombre());
+
+            params.put(
+                    "PACIENTE_NOMBRE",
+                    paciente.getApellidos() + ", " + paciente.getNombre()
+            );
             params.put("PACIENTE_DNI", paciente.getDni());
-            params.put("PACIENTE_FECHA_NAC",
+            params.put(
+                    "PACIENTE_FECHA_NAC",
                     paciente.getFechaNacimiento() != null
                             ? paciente.getFechaNacimiento().toString()
-                            : "");
-            params.put("PACIENTE_EDAD",
-                    calcularEdad(paciente.getFechaNacimiento()));
+                            : ""
+            );
+            params.put(
+                    "PACIENTE_EDAD",
+                    calcularEdad(paciente.getFechaNacimiento())
+            );
             params.put("PACIENTE_SEXO", nvl(paciente.getSexo()));
             params.put("PACIENTE_DIRECCION", nvl(paciente.getDireccion()));
             params.put("PACIENTE_CP", nvl(paciente.getCp()));
@@ -109,17 +142,26 @@ public class InformeConsultaService {
             params.put("POLIZA", nvl(paciente.getNumPoliza()));
 
             // ---------- ANTECEDENTES ----------
-            params.put("ANTECEDENTES_PERSONALES",
-                    nvl(paciente.getAntecedentesPersonales()));
-            params.put("ANTECEDENTES_FAMILIARES",
-                    nvl(paciente.getAntecedentesFamiliares()));
+
+            params.put(
+                    "ANTECEDENTES_PERSONALES",
+                    nvl(paciente.getAntecedentesPersonales())
+            );
+            params.put(
+                    "ANTECEDENTES_FAMILIARES",
+                    nvl(paciente.getAntecedentesFamiliares())
+            );
 
             // ---------- DATOS CONSULTA ----------
-            params.put("FECHA_CONSULTA",
+
+            params.put(
+                    "FECHA_CONSULTA",
                     consulta.getFechaHora() != null
                             ? consulta.getFechaHora().format(
-                            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-                            : "");
+                            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                    )
+                            : ""
+            );
             params.put("MOTIVO_CONSULTA", nvl(consulta.getMotivoConsulta()));
             params.put("EXPLORACION", nvl(consulta.getExploracion()));
             params.put("DIAGNOSTICO", nvl(consulta.getDiagnostico()));
@@ -127,15 +169,21 @@ public class InformeConsultaService {
             params.put("OBSERVACIONES", nvl(consulta.getObservaciones()));
 
             // ---------- EPISODIO / MÉDICO ----------
+
             params.put("EPISODIO", nvl(episodio.getMotivo()));
-            params.put("ESPECIALIDAD",
-                    especialidad != null ? especialidad.getNombre() : "");
-            params.put("MEDICO",
-                    medico != null ? medico.getNombreApellidos() : "");
+            params.put(
+                    "ESPECIALIDAD",
+                    especialidad != null ? especialidad.getNombre() : ""
+            );
+            params.put(
+                    "MEDICO",
+                    medico != null ? medico.getNombreApellidos() : ""
+            );
 
             // =========================
             // GENERAR INFORME
             // =========================
+
             JasperPrint jasperPrint =
                     JasperFillManager.fillReport(
                             jasperReport,
@@ -146,6 +194,7 @@ public class InformeConsultaService {
             // =========================
             // EXPORTAR A PDF
             // =========================
+
             String outputPath =
                     System.getProperty("user.home")
                             + File.separator
@@ -159,22 +208,38 @@ public class InformeConsultaService {
             // =========================
             // ABRIR PDF
             // =========================
+
             Desktop.getDesktop().open(new File(outputPath));
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(
-                    "Error generando el informe clínico", e);
+                    "Error generando el informe clínico", e
+            );
         }
     }
 
     // =========================
     // MÉTODOS AUXILIARES
     // =========================
+
+    /**
+     * Devuelve una cadena vacía si el valor es null.
+     * Se utiliza para evitar valores nulos en el informe.
+     *
+     * @param valor Cadena a comprobar
+     * @return Cadena no nula
+     */
     private static String nvl(String valor) {
         return valor != null ? valor : "";
     }
 
+    /**
+     * Calcula la edad del paciente a partir de su fecha de nacimiento.
+     *
+     * @param fechaNacimiento Fecha de nacimiento del paciente
+     * @return Edad en años o cadena vacía si no hay fecha
+     */
     private static String calcularEdad(LocalDate fechaNacimiento) {
         if (fechaNacimiento == null) return "";
         return String.valueOf(
@@ -182,3 +247,4 @@ public class InformeConsultaService {
         );
     }
 }
+

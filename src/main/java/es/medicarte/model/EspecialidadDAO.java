@@ -6,11 +6,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a la tabla
+ * especialidad de la base de datos.
+ */
 public class EspecialidadDAO {
 
     private static final String SELECT_ALL =
             "SELECT * FROM medicarte.especialidad ORDER BY nombre";
 
+    /**
+     * Obtiene la lista completa de especialidades.
+     * Se utiliza, por ejemplo, al asignar médicos o episodios.
+     *
+     * @return Lista de especialidades
+     */
     public List<Especialidad> findAll() {
 
         List<Especialidad> lista = new ArrayList<>();
@@ -32,9 +42,17 @@ public class EspecialidadDAO {
 
         return lista;
     }
+
+    /**
+     * Busca una especialidad por su identificador.
+     *
+     * @param idEspecialidad Identificador de la especialidad
+     * @return Especialidad encontrada o null si no existe
+     */
     public Especialidad findById(int idEspecialidad) {
 
-        String sql = "SELECT * FROM medicarte.especialidad WHERE id_especialidad = ?";
+        String sql =
+                "SELECT * FROM medicarte.especialidad WHERE id_especialidad = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -56,5 +74,5 @@ public class EspecialidadDAO {
 
         return null;
     }
-
 }
+

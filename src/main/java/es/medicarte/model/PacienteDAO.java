@@ -6,7 +6,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a datos de los pacientes.
+ * Implementa las operaciones CRUD y búsquedas personalizadas.
+ */
 public class PacienteDAO {
+
+    // =========================
+    // SENTENCIAS SQL
+    // =========================
 
     private static final String INSERT_SQL =
             "INSERT INTO medicarte.paciente (" +
@@ -22,26 +30,26 @@ public class PacienteDAO {
                     "grupo_sanguineo=?, alergias=?, antecedentes_personales=?, antecedentes_familiares=?, tratamiento_actual=?, foto_path=? " +
                     "WHERE id_paciente=?";
 
-
     private static final String SELECT_ALL_SQL =
             "SELECT * FROM medicarte.paciente ORDER BY apellidos, nombre";
 
     private static final String EXISTS_DNI_SQL =
             "SELECT COUNT(*) FROM medicarte.paciente WHERE dni = ?";
 
-    private static final String DELETE_SQL =
-            "DELETE FROM medicarte.paciente WHERE id_paciente=?";
-
     private static final String EXISTS_NHC_SQL =
             "SELECT COUNT(*) FROM medicarte.paciente WHERE nhc = ?";
+
+    private static final String DELETE_SQL =
+            "DELETE FROM medicarte.paciente WHERE id_paciente=?";
 
     private static final String SELECT_BY_ID_SQL =
             "SELECT * FROM medicarte.paciente WHERE id_paciente = ?";
 
     private static final String SELECT_BY_DNI_SQL =
             "SELECT * FROM medicarte.paciente WHERE dni = ?";
+
     /**
-     * Inserta un nuevo paciente en la base de datos
+     * Inserta un nuevo paciente en la base de datos.
      */
     public boolean insert(Paciente p) {
 
@@ -52,9 +60,8 @@ public class PacienteDAO {
             ps.setString(2, p.getNombre());
             ps.setString(3, p.getApellidos());
 
-
             if (p.getFechaNacimiento() != null) {
-                ps.setDate(4, java.sql.Date.valueOf(p.getFechaNacimiento()));
+                ps.setDate(4, Date.valueOf(p.getFechaNacimiento()));
             } else {
                 ps.setDate(4, null);
             }
@@ -86,7 +93,7 @@ public class PacienteDAO {
     }
 
     /**
-     * Obtiene la lista completa de pacientes
+     * Devuelve la lista completa de pacientes.
      */
     public List<Paciente> findAll() {
 
@@ -108,7 +115,8 @@ public class PacienteDAO {
     }
 
     /**
-     * Mapea un ResultSet a un objeto Paciente
+     * Mapea un ResultSet a un objeto Paciente.
+     * Centraliza el proceso de conversión desde JDBC.
      */
     private Paciente mapResultSetToPaciente(ResultSet rs) throws SQLException {
 
@@ -150,6 +158,9 @@ public class PacienteDAO {
         return p;
     }
 
+    /**
+     * Actualiza los datos de un paciente existente.
+     */
     public boolean update(Paciente p) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -159,9 +170,8 @@ public class PacienteDAO {
             ps.setString(2, p.getNombre());
             ps.setString(3, p.getApellidos());
 
-
             if (p.getFechaNacimiento() != null) {
-                ps.setDate(4, java.sql.Date.valueOf(p.getFechaNacimiento()));
+                ps.setDate(4, Date.valueOf(p.getFechaNacimiento()));
             } else {
                 ps.setDate(4, null);
             }
@@ -185,7 +195,6 @@ public class PacienteDAO {
             ps.setString(21, p.getFotoPath());
             ps.setInt(22, p.getIdPaciente());
 
-
             return ps.executeUpdate() == 1;
 
         } catch (SQLException e) {
@@ -194,6 +203,9 @@ public class PacienteDAO {
         }
     }
 
+    /**
+     * Comprueba si existe un paciente con el DNI indicado.
+     */
     public boolean existsByDni(String dni) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -202,9 +214,7 @@ public class PacienteDAO {
             ps.setString(1, dni);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
 
         } catch (SQLException e) {
@@ -214,6 +224,9 @@ public class PacienteDAO {
         return false;
     }
 
+    /**
+     * Comprueba si existe un paciente con el NHC indicado.
+     */
     public boolean existsByNhc(String nhc) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -222,9 +235,7 @@ public class PacienteDAO {
             ps.setString(1, nhc);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
 
         } catch (SQLException e) {
@@ -234,6 +245,9 @@ public class PacienteDAO {
         return false;
     }
 
+    /**
+     * Elimina un paciente por su identificador.
+     */
     public boolean delete(int idPaciente) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -247,6 +261,10 @@ public class PacienteDAO {
             return false;
         }
     }
+
+    /**
+     * Búsqueda dinámica de pacientes por distintos criterios.
+     */
     public List<Paciente> buscar(String apellidos, String nombre, String dni) {
 
         List<Paciente> resultado = new ArrayList<>();
@@ -295,6 +313,9 @@ public class PacienteDAO {
         return resultado;
     }
 
+    /**
+     * Busca un paciente por su identificador.
+     */
     public Paciente findById(int idPaciente) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -315,6 +336,9 @@ public class PacienteDAO {
         return null;
     }
 
+    /**
+     * Busca un paciente por su DNI.
+     */
     public Paciente findByDni(String dni) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -334,6 +358,6 @@ public class PacienteDAO {
 
         return null;
     }
-
 }
+
 

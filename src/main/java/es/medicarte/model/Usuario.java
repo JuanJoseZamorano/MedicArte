@@ -1,15 +1,29 @@
 package es.medicarte.model;
 
+/**
+ * Clase modelo que representa un usuario del sistema.
+ * Contiene la información necesaria para la autenticación
+ * y la gestión de roles dentro de la aplicación.
+ */
 public class Usuario {
 
+    // Identificador único del usuario en la base de datos
     private int idUsuario;
+
+    // Nombre de usuario utilizado para iniciar sesión
     private String username;
+
+    // Hash de la contraseña (nunca se almacena en texto plano)
     private String passwordHash;
+
+    // Rol del usuario (ADMIN, MEDICO, etc.)
     private String rol;
 
+    // Indica si el usuario está activo o no en el sistema
     private boolean activo;
 
-    // añadimos la variable necesaria de idmedico
+    // Identificador del médico asociado al usuario (solo para rol MEDICO)
+    // Puede ser null si el usuario no es médico
     private Integer idMedico;
 
     public int getIdUsuario() {
@@ -59,8 +73,12 @@ public class Usuario {
     public void setIdMedico(Integer idMedico) {
         this.idMedico = idMedico;
     }
-    // SOBREESCRIBIMOS LE METODO TOSTRING PARA QUE NOS APAREZCA EL
-    // USUARIO EN AL LISTA DE COMBOBOX PARA ELIMINAR EN ADMINISTRACION
+
+    /**
+     * Se sobrescribe el método toString para mostrar correctamente
+     * el usuario en controles gráficos como ComboBox.
+     * Se utiliza, por ejemplo, en la administración de usuarios.
+     */
     @Override
     public String toString() {
         return username + " (" + rol + ")";

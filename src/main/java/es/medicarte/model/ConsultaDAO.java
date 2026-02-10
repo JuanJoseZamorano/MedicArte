@@ -3,22 +3,34 @@ package es.medicarte.model;
 import es.medicarte.util.DatabaseConnection;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO encargada de gestionar el acceso a datos
+ * de las consultas médicas.
+ */
 public class ConsultaDAO {
 
+    // Consulta para obtener las consultas de un episodio,
+    // ordenadas cronológicamente
     private static final String SELECT_BY_EPISODIO =
             "SELECT * FROM medicarte.consulta " +
                     "WHERE id_episodio = ? " +
                     "ORDER BY fecha_hora ASC";
 
+    // Inserción de una nueva consulta
     private static final String INSERT_CONSULTA =
             "INSERT INTO medicarte.consulta " +
                     "(id_episodio, id_medico, id_cita, fecha_hora, motivo_consulta, anamnesis, exploracion, diagnostico, tratamiento, observaciones, estado) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+    /**
+     * Obtiene todas las consultas asociadas a un episodio clínico.
+     *
+     * @param idEpisodio Identificador del episodio
+     * @return Lista de consultas
+     */
     public List<Consulta> findByEpisodio(int idEpisodio) {
 
         List<Consulta> lista = new ArrayList<>();
@@ -41,6 +53,10 @@ public class ConsultaDAO {
         return lista;
     }
 
+    /**
+     * Mapea un ResultSet a un objeto Consulta.
+     * Centraliza la conversión desde JDBC.
+     */
     private Consulta mapConsulta(ResultSet rs) throws SQLException {
 
         Consulta c = new Consulta();
@@ -66,6 +82,13 @@ public class ConsultaDAO {
 
         return c;
     }
+
+    /**
+     * Inserta una nueva consulta en la base de datos.
+     *
+     * @param c Consulta a insertar
+     * @return true si la inserción se realiza correctamente
+     */
     public boolean insert(Consulta c) {
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -90,5 +113,5 @@ public class ConsultaDAO {
             return false;
         }
     }
-
 }
+
