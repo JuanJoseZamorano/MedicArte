@@ -1,7 +1,12 @@
 package es.medicarte.controller;
 
+// Clase auxiliar que utilizamos para poder mezclar cabeceras de mes
+// con citas dentro del mismo ListView
 import es.medicarte.util.ItemListaCitas;
+
+// Clase encargada de gestionar los cambios de escena en la aplicación
 import es.medicarte.util.SceneManager;
+
 import javafx.fxml.FXML;
 import es.medicarte.model.Paciente;
 import es.medicarte.model.PacienteDAO;
@@ -18,91 +23,141 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * Controlador de la vista de Citas.
+ *
+ * Esta clase se encarga de:
+ * - Mostrar todas las citas o las de un paciente concreto.
+ * - Agrupar las citas por meses en el listado.
+ * - Permitir buscar por DNI.
+ * - Mostrar el detalle de la cita seleccionada.
+ * - Gestionar las acciones sobre las citas (editar, cancelar, etc.).
+ */
 public class CitasController {
+
+    // Si se entra desde Pacientes, se guarda aquí el id del paciente
     private Integer idPacienteFiltro = null;
+
+    // DAO para acceder a los datos de pacientes
     private final PacienteDAO pacienteDAO = new PacienteDAO();
+
+    // Campo de búsqueda por DNI
     @FXML
     private TextField txtBuscarDni;
 
-//    @FXML
-//    private TextField txtBuscarApellidos;
-//    @FXML
-//    private TextField txtBuscarNombre;
-
+    // DatePicker para filtrar por fecha concreta
     @FXML
     private DatePicker dpFecha;
 
-    @FXML private ListView<ItemListaCitas> listCitas;
+    // ListView que muestra citas y cabeceras de mes
+    @FXML
+    private ListView<ItemListaCitas> listCitas;
 
+    // DAO para acceder a los datos de citas
     private final CitaDAO citaDAO = new CitaDAO();
+
+    // Lista observable que alimenta el ListView
     private final ObservableList<ItemListaCitas> citas = FXCollections.observableArrayList();
 
-
+    // Labels de detalle de la cita seleccionada
     @FXML private Label lblPaciente;
     @FXML private Label lblFechaHora;
     @FXML private Label lblObservaciones;
     @FXML private Label lblEstado;
 
+    // Cita actualmente seleccionada en la lista
     private Cita citaSeleccionada;
 
+    /**
+     * Método initialize() que se ejecuta automáticamente
+     * cuando se carga el FXML.
+     */
     @FXML
     private void initialize() {
+
+        // Preparar vista en modo general (sin filtro)
         prepararVistaGeneral();
+
+        // Configurar cómo se muestran los elementos del ListView
         configurarListViewCitas();
+
+        // Configurar comportamiento al seleccionar una cita
         configurarSeleccionCita();
+
+        // Si no hay filtro por paciente, cargar todas las citas
         if (idPacienteFiltro == null) {
             cargarTodasLasCitas();
         }
-
     }
 
-
+    /**
+     * Carga todas las citas de la base de datos.
+     * Después las agrupa por meses.
+     */
     private void cargarTodasLasCitas() {
         List<Cita> lista = citaDAO.findAll();
         cargarCitasConCabeceras(lista);
     }
 
+    /**
+     * Carga solo las citas de un paciente concreto.
+     */
     private void cargarCitasPorPaciente(int idPaciente) {
         List<Cita> lista = citaDAO.findByPaciente(idPaciente);
         cargarCitasConCabeceras(lista);
     }
 
+    /**
+     * Método que se llama desde SceneManager cuando
+     * se entra en esta vista con filtro de paciente.
+     */
     public void setIdPacienteFiltro(Integer idPaciente) {
         this.idPacienteFiltro = idPaciente;
-        // Teste para ver que filtro aplica
-        // System.out.println("Filtro recibido: " + idPaciente);
+
         if (idPacienteFiltro != null) {
-            // cargarCitasPorPaciente(idPacienteFiltro);
             prepararVistaFiltradaPorPaciente();
-            // txtBuscarDni.setDisable(true); // opcional
             cargarCitasPorPaciente(idPacienteFiltro);
         } else {
             cargarTodasLasCitas();
         }
     }
+
+    /**
+     * Ajusta la vista cuando se ha entrado desde Pacientes.
+     * Rellena el DNI automáticamente y bloquea el campo.
+     */
     private void prepararVistaFiltradaPorPaciente() {
 
-        // Buscamos el paciente
+        // Buscamos el paciente en la base de datos
         Paciente p = pacienteDAO.findById(idPacienteFiltro);
 
         if (p != null) {
             // Rellenamos el DNI automáticamente
             txtBuscarDni.setText(p.getDni());
 
-            // Opcional: bloquear el campo para que se vea claro el filtro
+            // Bloqueamos el campo para evitar modificar el filtro
             txtBuscarDni.setDisable(true);
         }
     }
+
     @FXML
     private void buscarPaciente() {
+        // Método reservado (actualmente no implementado)
     }
+
+    /**
+     * Prepara la vista en modo general (sin filtro por paciente).
+     */
     private void prepararVistaGeneral() {
         txtBuscarDni.setDisable(false);
         txtBuscarDni.clear();
     }
 
-
+    /**
+     * Configura el ListView para que:
+     * - Muestre cabeceras de mes en negrita.
+     * - Muestre citas con colores según estado.
+     */
     private void configurarListViewCitas() {
 
         listCitas.setCellFactory(lv -> new ListCell<>() {
@@ -116,6 +171,7 @@ public class CitasController {
                     return;
                 }
 
+                // Si es cabecera (mes)
                 if (item.isCabecera()) {
                     setText(item.getTexto());
                     setStyle("""
@@ -123,16 +179,22 @@ public class CitasController {
                     -fx-text-fill: #555;
                     -fx-padding: 10 0 5 10;
                 """);
-                } else {
+                }
+                // Si es una cita normal
+                else {
                     Cita c = item.getCita();
 
                     setText("   " +
                             c.getFechaHora().toLocalDate() + " " +
                             c.getFechaHora().toLocalTime().withSecond(0) +
                             " - " +
-                            (c.getObservaciones() != null ? c.getObservaciones() : "Sin motivo")+ " (" + c.getEstado() + ")"
+                            (c.getObservaciones() != null
+                                    ? c.getObservaciones()
+                                    : "Sin motivo") +
+                            " (" + c.getEstado() + ")"
                     );
 
+                    // Color según estado
                     switch (c.getEstado()) {
                         case "COMPLETADA" -> setStyle("-fx-text-fill: green;");
                         case "CANCELADA"  -> setStyle("-fx-text-fill: red;");
@@ -144,7 +206,10 @@ public class CitasController {
         });
     }
 
-
+    /**
+     * Configura el comportamiento cuando el usuario
+     * selecciona una cita en la lista.
+     */
     private void configurarSeleccionCita() {
 
         listCitas.getSelectionModel().selectedItemProperty().addListener(
@@ -157,9 +222,12 @@ public class CitasController {
         );
     }
 
+    /**
+     * Muestra en la parte derecha el detalle de la cita seleccionada.
+     */
     private void mostrarDetalleCita(Cita c) {
 
-        // Paciente (por ahora mostramos el ID)
+        // Obtenemos el paciente asociado a la cita
         Paciente p = pacienteDAO.findById(c.getIdPaciente());
 
         if (p != null) {
@@ -177,24 +245,25 @@ public class CitasController {
 
         // Observaciones
         lblObservaciones.setText(
-                c.getObservaciones() != null ? c.getObservaciones() : "—"
+                c.getObservaciones() != null
+                        ? c.getObservaciones()
+                        : "—"
         );
 
         // Estado
         lblEstado.setText(c.getEstado());
     }
 
+    /**
+     * Búsqueda de citas por DNI del paciente.
+     */
     @FXML
     private void buscarCitas() {
 
-
         String dni = txtBuscarDni.getText();
 
+        // Si el campo está vacío, mostramos todas
         if (dni == null || dni.isBlank()) {
-//            new Alert(
-//                    Alert.AlertType.WARNING,
-//                    "Introduzca un DNI para buscar sus citas."
-//            ).showAndWait();
             cargarTodasLasCitas();
             return;
         }
@@ -206,14 +275,21 @@ public class CitasController {
                     Alert.AlertType.INFORMATION,
                     "No se ha encontrado ningún paciente con ese DNI."
             ).showAndWait();
-
             return;
         }
+
+        // Si el paciente existe, cargamos solo sus citas
         cargarCitasPorPaciente(p.getIdPaciente());
     }
 
+    /**
+     * Filtra las citas por la fecha seleccionada en el DatePicker.
+     * Si no se selecciona fecha, se muestra un aviso.
+     * Si no hay citas ese día, se informa al usuario.
+     */
     @FXML
     private void filtrarPorFechas() {
+
         LocalDate fecha = dpFecha.getValue();
 
         if (fecha == null) {
@@ -224,6 +300,7 @@ public class CitasController {
             return;
         }
 
+        // Obtenemos las citas para la fecha seleccionada
         List<Cita> lista = citaDAO.findByFecha(fecha);
 
         if (lista.isEmpty()) {
@@ -233,15 +310,22 @@ public class CitasController {
             ).showAndWait();
         }
 
-        // Usas el mismo método que ya agrupa por meses
+        // Reutilizamos el método que agrupa por meses
         cargarCitasConCabeceras(lista);
     }
 
+    /**
+     * Método reservado para navegación (actualmente no implementado).
+     */
     @FXML
     private void cancelar() {
         // Volver al dashboard médico
     }
 
+    /**
+     * Permite editar una cita siempre que esté en estado PENDIENTE.
+     * Se reutiliza la vista de NuevaCitaController para modificar los datos.
+     */
     @FXML
     private void editarCita() {
 
@@ -253,6 +337,7 @@ public class CitasController {
             return;
         }
 
+        // Solo permitimos editar citas pendientes
         if (!"PENDIENTE".equals(citaSeleccionada.getEstado())) {
             new Alert(
                     Alert.AlertType.INFORMATION,
@@ -261,6 +346,7 @@ public class CitasController {
             return;
         }
 
+        // Cargamos la vista de nueva cita en modo edición
         SceneManager.loadScene(
                 "/es/medicarte/view/nueva_cita.fxml",
                 "MedicArte - Editar cita",
@@ -272,9 +358,13 @@ public class CitasController {
         );
     }
 
-
+    /**
+     * Permite pasar una cita pendiente a consulta.
+     * Solo se puede hacer si el estado es PENDIENTE.
+     */
     @FXML
     private void pasarConsulta() {
+
         if (citaSeleccionada == null) {
             new Alert(
                     Alert.AlertType.WARNING,
@@ -291,6 +381,7 @@ public class CitasController {
             return;
         }
 
+        // Se abre la vista de consulta pasando la cita seleccionada
         SceneManager.loadScene(
                 "/es/medicarte/view/consulta.fxml",
                 "MedicArte - Consulta",
@@ -298,17 +389,15 @@ public class CitasController {
         );
     }
 
+    /**
+     * Abre el historial clínico del paciente asociado a la cita seleccionada.
+     */
     @FXML
     private void abrirHistorial() {
-        listCitas.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal != null && !newVal.isCabecera()) {
-                        citaSeleccionada = newVal.getCita();
 
-                    }
-                }
-        );
+        // Recuperamos el paciente de la cita
         Paciente p = pacienteDAO.findById(citaSeleccionada.getIdPaciente());
+
         if (p == null) {
             new Alert(
                     Alert.AlertType.WARNING,
@@ -324,6 +413,9 @@ public class CitasController {
         );
     }
 
+    /**
+     * Abre directamente la ficha del paciente asociado a la cita seleccionada.
+     */
     @FXML
     private void verPaciente() {
 
@@ -348,6 +440,10 @@ public class CitasController {
         );
     }
 
+    /**
+     * Abre la vista de nueva cita.
+     * Si el DNI está relleno, se pasa automáticamente para precargar el paciente.
+     */
     @FXML
     private void nuevaCita() {
 
@@ -364,6 +460,9 @@ public class CitasController {
         );
     }
 
+    /**
+     * Cancela una cita siempre que no esté ya cancelada ni completada.
+     */
     @FXML
     private void cancelarCita() {
 
@@ -415,7 +514,7 @@ public class CitasController {
             return;
         }
 
-        // Actualizamos estado local
+        // Actualizamos el estado en memoria
         citaSeleccionada.setEstado("CANCELADA");
 
         // Refrescamos la agenda
@@ -431,20 +530,18 @@ public class CitasController {
         ).showAndWait();
     }
 
-
-//    @FXML
-//    private void volver() {
-//        SceneManager.loadScene(
-//                "/es/medicarte/view/medico_dashboard.fxml",
-//                "MedicArte - Nueva cita"
-//        );
-//    }
-
+    /**
+     * Vuelve a la vista anterior utilizando la pila de navegación del SceneManager.
+     */
     @FXML
     private void volver() {
         SceneManager.goBack();
     }
 
+    /**
+     * Agrupa las citas por meses y añade cabeceras visuales
+     * para mejorar la lectura del listado.
+     */
     private void cargarCitasConCabeceras(List<Cita> lista) {
 
         citas.clear();
@@ -455,7 +552,9 @@ public class CitasController {
 
             YearMonth mesCita = YearMonth.from(c.getFechaHora().toLocalDate());
 
+            // Si cambia el mes, añadimos una cabecera
             if (!mesCita.equals(mesActual)) {
+
                 String tituloMes =
                         mesCita.getMonth()
                                 .getDisplayName(TextStyle.FULL, new Locale("es"))
@@ -466,11 +565,11 @@ public class CitasController {
                 mesActual = mesCita;
             }
 
+            // Añadimos la cita debajo de su mes correspondiente
             citas.add(new ItemListaCitas(c));
         }
 
         listCitas.setItems(citas);
     }
-
-
 }
+

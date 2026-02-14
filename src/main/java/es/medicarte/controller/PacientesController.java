@@ -5,7 +5,6 @@ import es.medicarte.model.PacienteDAO;
 import es.medicarte.util.FileUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -15,18 +14,32 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
+/**
+ * Controlador de la vista de gestión de pacientes.
+ * Esta clase se encarga de:
+ * - Mostrar el listado de pacientes.
+ * - Permitir la búsqueda.
+ * - Gestionar el alta, edición y eliminación.
+ * - Gestionar la fotografía del paciente.
+ * - Navegar a citas e historial clínico.
+ * Sigue el patrón MVC, delegando el acceso a datos en PacienteDAO.
+ */
 public class PacientesController {
 
-    // ===== LISTA =====
+    // ===================== COMPONENTES DE LA VISTA =====================
+
+    // Lista visual donde se muestran los pacientes
     @FXML
     private ListView<Paciente> listPacientes;
 
-    // ===== BÚSQUEDA =====
+    // --------------------- CAMPOS DE BÚSQUEDA ---------------------
+
     @FXML private TextField txtBuscarApellidos;
     @FXML private TextField txtBuscarNombre;
     @FXML private TextField txtBuscarDni;
 
-    // ===== FORMULARIO =====
+    // --------------------- CAMPOS DEL FORMULARIO PRINCIPAL ---------------------
+
     @FXML private TextField txtApellidos;
     @FXML private TextField txtNombre;
     @FXML private DatePicker dpFechaNacimiento;
@@ -43,28 +56,40 @@ public class PacientesController {
     @FXML private TextField txtAseguradora;
     @FXML private TextField txtPoliza;
 
-    // ===== DATOS CLÍNICOS =====
+    // --------------------- DATOS CLÍNICOS ---------------------
+
     @FXML private TextArea txtAntPersonales;
     @FXML private TextArea txtAntFamiliares;
     @FXML private TextArea txtTratamiento;
     @FXML private TextArea txtAlergias;
 
-    // ===== FOTO =====
+    // --------------------- FOTO ---------------------
+
     @FXML private ImageView imgFoto;
-    // ===== BOTONES =====
-    @FXML
-    private Button btnLimpiar;
-    @FXML
-    private Button btnFoto;
 
+    // --------------------- BOTONES ---------------------
 
+    @FXML private Button btnLimpiar;
+    @FXML private Button btnFoto;
+
+    // ===================== VARIABLES DE CONTROL =====================
+
+    // DAO para acceso a datos
     private final PacienteDAO pacienteDAO = new PacienteDAO();
+
+    // Lista observable que alimenta el ListView
     private final ObservableList<Paciente> pacientes = FXCollections.observableArrayList();
 
+    // Paciente actualmente seleccionado en la lista
     private Paciente pacienteSeleccionado;
+
+    // Ruta temporal de la foto seleccionada
     private String fotoSeleccionadaPath;
 
-
+    /**
+     * Estilo visual que se aplica cuando el formulario
+     * entra en modo edición o alta.
+     */
     private static final String ESTILO_EDITABLE =
             "-fx-background-color: rgba(206, 230, 244, 0.8);" +
                     "-fx-border-color: #c0c0c0;" +
@@ -72,21 +97,27 @@ public class PacientesController {
                     "-fx-border-radius: 4;" +
                     "-fx-background-radius: 4;";
 
-
+    /**
+     * Método que se ejecuta automáticamente cuando se carga la vista.
+     * Inicializa todos los componentes y deja el formulario en modo solo lectura.
+     */
     @FXML
     private void initialize() {
-        deshabilitarEdicion();
-        configurarListView();
-        configurarComboSexo();
-        cargarPacientes();
-        configurarSeleccion();
-        btnLimpiar.setVisible(false);
 
-
+        deshabilitarEdicion();      // Por defecto el formulario está bloqueado
+        configurarListView();      // Configuramos cómo se muestran los pacientes
+        configurarComboSexo();     // Cargamos valores del combo sexo
+        cargarPacientes();         // Cargamos todos los pacientes desde BD
+        configurarSeleccion();     // Configuramos listener de selección
+        btnLimpiar.setVisible(false); // El botón limpiar solo se usa en modo alta
     }
 
     // =================== CONFIGURACIONES ===================
 
+    /**
+     * Define cómo se renderiza cada paciente dentro del ListView.
+     * Se muestra Apellidos, Nombre y DNI.
+     */
     private void configurarListView() {
         listPacientes.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -98,10 +129,18 @@ public class PacientesController {
         });
     }
 
+    /**
+     * Carga los valores posibles del campo Sexo.
+     * Se hace manualmente ya que son valores cerrados.
+     */
     private void configurarComboSexo() {
         cmbSexo.getItems().addAll("Hombre", "Mujer", "Otro");
     }
 
+    /**
+     * Listener que detecta cuándo se selecciona un paciente en la lista.
+     * Al seleccionar uno, se cargan automáticamente sus datos en el formulario.
+     */
     private void configurarSeleccion() {
         listPacientes.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> {
@@ -109,27 +148,34 @@ public class PacientesController {
                         pacienteSeleccionado = newVal;
                         cargarPacienteEnFormulario(newVal);
                     }
-
                 }
-
         );
-deshabilitarEdicion();
+
+        deshabilitarEdicion(); // Se mantiene bloqueado hasta entrar en modo edición
     }
 
     // =================== CARGA DE DATOS ===================
 
+    /**
+     * Carga todos los pacientes desde la base de datos
+     * y los muestra en la lista.
+     */
     private void cargarPacientes() {
         pacientes.setAll(pacienteDAO.findAll());
         listPacientes.setItems(pacientes);
         deshabilitarEdicion();
-
-
     }
 
+    /**
+     * Rellena todos los campos del formulario
+     * con los datos del paciente seleccionado.
+     */
     private void cargarPacienteEnFormulario(Paciente p) {
 
+        // Guardamos la ruta de la foto
         fotoSeleccionadaPath = p.getFotoPath();
 
+        // Cargamos imagen si existe
         if (fotoSeleccionadaPath != null && !fotoSeleccionadaPath.isBlank()) {
             File file = new File(fotoSeleccionadaPath);
             if (file.exists()) {
@@ -140,6 +186,8 @@ deshabilitarEdicion();
         } else {
             imgFoto.setImage(null);
         }
+
+        // Carga de datos personales
         txtApellidos.setText(p.getApellidos());
         txtNombre.setText(p.getNombre());
         dpFechaNacimiento.setValue(p.getFechaNacimiento());
@@ -156,20 +204,28 @@ deshabilitarEdicion();
         txtAseguradora.setText(p.getAseguradora());
         txtPoliza.setText(p.getNumPoliza());
 
+        // Carga de datos clínicos
         txtAntPersonales.setText(p.getAntecedentesPersonales());
         txtAntFamiliares.setText(p.getAntecedentesFamiliares());
         txtTratamiento.setText(p.getTratamientoActual());
         txtAlergias.setText(p.getAlergias());
 
-
+        // Ajustes visuales
         btnLimpiar.setVisible(false);
         quitarColorAlta();
         deshabilitarEdicion();
     }
-
+    /**
+     * Método principal de guardado.
+     * Este método gestiona tanto el alta de un nuevo paciente
+     * como la edición de uno existente.
+     * Se diferencia el comportamiento según si existe o no
+     * un paciente seleccionado en memoria.
+     */
     @FXML
     private void guardarPaciente() {
 
+        // Obtenemos los valores introducidos en el formulario
         String dniIntroducido = txtDni.getText();
         String nhcIntroducido = txtNhc.getText();
 
@@ -178,6 +234,7 @@ deshabilitarEdicion();
        ========================================================= */
         if (pacienteSeleccionado == null) {
 
+            // Validación de DNI duplicado
             if (pacienteDAO.existsByDni(dniIntroducido)) {
                 new Alert(
                         Alert.AlertType.WARNING,
@@ -186,6 +243,7 @@ deshabilitarEdicion();
                 return;
             }
 
+            // Validación de NHC obligatorio
             if (nhcIntroducido == null || nhcIntroducido.isBlank()) {
                 new Alert(
                         Alert.AlertType.WARNING,
@@ -194,6 +252,7 @@ deshabilitarEdicion();
                 return;
             }
 
+            // Validación de NHC duplicado
             if (pacienteDAO.existsByNhc(nhcIntroducido)) {
                 new Alert(
                         Alert.AlertType.WARNING,
@@ -202,29 +261,47 @@ deshabilitarEdicion();
                 return;
             }
 
+            // Creamos nuevo objeto paciente
             Paciente p = new Paciente();
+
+            // Rellenamos el objeto con los datos del formulario
             rellenarPacienteDesdeFormulario(p);
+
+            // Inicialmente la foto se pone a null (se gestionará después)
             p.setFotoPath(null);
 
+            // Insertamos en base de datos
             boolean ok = pacienteDAO.insert(p);
 
             if (!ok) {
-                new Alert(Alert.AlertType.ERROR, "No se pudo guardar el paciente").showAndWait();
+                new Alert(Alert.AlertType.ERROR,
+                        "No se pudo guardar el paciente").showAndWait();
                 return;
             }
 
-            // 2. Recargamos y obtenemos el paciente ya con ID
+            /*
+             * Recargamos la lista para obtener el paciente ya insertado
+             * con su ID generado por la base de datos.
+             */
             cargarPacientes();
+
             Paciente nuevo = pacientes.stream()
                     .filter(pa -> pa.getDni().equals(p.getDni()))
                     .findFirst()
                     .orElse(null);
 
+            /*
+             * Si el paciente tiene foto seleccionada,
+             * la copiamos al directorio interno y actualizamos la ruta.
+             */
             if (nuevo != null && fotoSeleccionadaPath != null) {
                 try {
                     File origen = new File(fotoSeleccionadaPath);
                     if (origen.exists()) {
-                        String rutaInterna = FileUtils.copiarFotoPaciente(origen, nuevo.getIdPaciente());
+                        String rutaInterna = FileUtils.copiarFotoPaciente(
+                                origen,
+                                nuevo.getIdPaciente()
+                        );
                         nuevo.setFotoPath(rutaInterna);
                         pacienteDAO.update(nuevo);
                     }
@@ -233,22 +310,26 @@ deshabilitarEdicion();
                 }
             }
 
+            // Seleccionamos automáticamente el nuevo paciente en la lista
             listPacientes.getSelectionModel().select(nuevo);
             pacienteSeleccionado = nuevo;
+
+            // Volvemos al modo normal
             btnLimpiar.setVisible(false);
             quitarColorAlta();
 
             return;
-
         }
 
     /* =========================================================
        CASO UPDATE (MODO EDICIÓN)
        ========================================================= */
+
         String dniOriginal = pacienteSeleccionado.getDni();
         String nhcOriginal = pacienteSeleccionado.getNhc();
         String nhcNuevo = txtNhc.getText();
 
+        // Validación: no permitir cambiar DNI por uno ya existente
         if (!dniIntroducido.equals(dniOriginal)
                 && pacienteDAO.existsByDni(dniIntroducido)) {
 
@@ -259,6 +340,7 @@ deshabilitarEdicion();
             return;
         }
 
+        // Validación: no permitir cambiar NHC por uno ya existente
         if (!nhcNuevo.equals(nhcOriginal)
                 && pacienteDAO.existsByNhc(nhcNuevo)) {
 
@@ -269,15 +351,21 @@ deshabilitarEdicion();
             return;
         }
 
-        // 1. Actualizamos datos normales
+        // Actualizamos los datos básicos del paciente
         rellenarPacienteDesdeFormulario(pacienteSeleccionado);
 
-        // 2. Si hay foto nueva, la copiamos
+        /*
+         * Si se ha seleccionado una nueva foto,
+         * se copia al directorio interno y se actualiza la ruta.
+         */
         if (fotoSeleccionadaPath != null) {
             try {
                 File origen = new File(fotoSeleccionadaPath);
                 if (origen.exists()) {
-                    String rutaInterna = FileUtils.copiarFotoPaciente(origen, pacienteSeleccionado.getIdPaciente());
+                    String rutaInterna = FileUtils.copiarFotoPaciente(
+                            origen,
+                            pacienteSeleccionado.getIdPaciente()
+                    );
                     pacienteSeleccionado.setFotoPath(rutaInterna);
                 }
             } catch (Exception e) {
@@ -285,6 +373,7 @@ deshabilitarEdicion();
             }
         }
 
+        // Guardamos cambios en base de datos
         boolean ok = pacienteDAO.update(pacienteSeleccionado);
 
         if (ok) {
@@ -293,13 +382,21 @@ deshabilitarEdicion();
             btnLimpiar.setVisible(false);
             quitarColorAlta();
         } else {
-            new Alert(Alert.AlertType.ERROR, "No se pudo actualizar el paciente").showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudo actualizar el paciente").showAndWait();
         }
+
+        // Volvemos a modo solo lectura
         deshabilitarEdicion();
     }
-
-
+    /**
+     * Copia los datos introducidos en el formulario
+     * al objeto Paciente recibido por parámetro.
+     * Este método centraliza la asignación de valores
+     * para evitar duplicación de código en insert y update.
+     */
     private void rellenarPacienteDesdeFormulario(Paciente p) {
+
         p.setFotoPath(fotoSeleccionadaPath);
         p.setApellidos(txtApellidos.getText());
         p.setNombre(txtNombre.getText());
@@ -322,32 +419,34 @@ deshabilitarEdicion();
         p.setTratamientoActual(txtTratamiento.getText());
         p.setAlergias(txtAlergias.getText());
     }
-
+    /**
+     * Activa el modo alta.
+     * Se limpia el formulario, se habilita la edición
+     * y se aplica estilo visual diferenciador.
+     */
     @FXML
     private void modoAlta() {
 
-        // Entramos en modo alta
         pacienteSeleccionado = null;
 
-
-        // Limpiamos formulario
         limpiarFormulario();
 
-        // Mostramos el botón Limpiar
         btnLimpiar.setVisible(true);
 
-        // Quitamos selección de la lista
         listPacientes.getSelectionModel().clearSelection();
+
         habilitarEdicion();
         cambiarColorAlta();
-
     }
-
+    /**
+     * Limpia todos los campos del formulario.
+     * Se utiliza principalmente en modo alta o tras eliminar un paciente.
+     * No elimina datos de la base de datos, solo limpia la interfaz.
+     */
     @FXML
     private void limpiarFormulario() {
 
-
-
+        // Campos personales
         txtApellidos.clear();
         txtNombre.clear();
         dpFechaNacimiento.setValue(null);
@@ -364,16 +463,22 @@ deshabilitarEdicion();
         txtAseguradora.clear();
         txtPoliza.clear();
 
+        // Campos clínicos
         txtAntPersonales.clear();
         txtAntFamiliares.clear();
         txtTratamiento.clear();
         txtAlergias.clear();
 
+        // Imagen del paciente
         imgFoto.setImage(null);
         fotoSeleccionadaPath = null;
-        imgFoto.setImage(null);
-
+        imgFoto.setImage(null); // Se limpia por seguridad
     }
+
+    /**
+     * Realiza la búsqueda de pacientes en base a los criterios introducidos.
+     * Se delega la consulta al DAO y se actualiza la lista visual.
+     */
     @FXML
     private void buscarPacientes() {
 
@@ -381,22 +486,33 @@ deshabilitarEdicion();
         String nombre = txtBuscarNombre.getText();
         String dni = txtBuscarDni.getText();
 
+        // Se actualiza la lista observable con el resultado de la búsqueda
         pacientes.setAll(
                 pacienteDAO.buscar(apellidos, nombre, dni)
         );
 
+        // Se limpia la selección actual
         listPacientes.getSelectionModel().clearSelection();
         pacienteSeleccionado = null;
+
+        // Se deshabilita edición hasta nueva selección
         deshabilitarEdicion();
     }
+
+    /**
+     * Elimina el paciente seleccionado tras confirmación del usuario.
+     * Se comprueba previamente que haya un paciente seleccionado.
+     */
     @FXML
     private void eliminarPaciente() {
 
         if (pacienteSeleccionado == null) {
-            new Alert(Alert.AlertType.WARNING, "No hay paciente seleccionado").showAndWait();
+            new Alert(Alert.AlertType.WARNING,
+                    "No hay paciente seleccionado").showAndWait();
             return;
         }
 
+        // Confirmación antes de eliminar (buena práctica de seguridad)
         Alert confirm = new Alert(
                 Alert.AlertType.CONFIRMATION,
                 "¿Seguro que desea eliminar el paciente?",
@@ -406,40 +522,49 @@ deshabilitarEdicion();
         confirm.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
 
-                boolean ok = pacienteDAO.delete(pacienteSeleccionado.getIdPaciente());
+                boolean ok = pacienteDAO.delete(
+                        pacienteSeleccionado.getIdPaciente()
+                );
 
                 if (ok) {
                     limpiarFormulario();
                     cargarPacientes();
                 } else {
-                    new Alert(Alert.AlertType.ERROR, "No se pudo eliminar el paciente").showAndWait();
+                    new Alert(Alert.AlertType.ERROR,
+                            "No se pudo eliminar el paciente")
+                            .showAndWait();
                 }
             }
         });
     }
 
-//    @FXML
-//    private void cancelar() {
-//        SceneManager.loadScene(
-//                "/es/medicarte/view/medico_dashboard.fxml",
-//                "MedicArte - Área Médica"
-//        );
-//    }
-
+    /**
+     * Vuelve a la vista anterior usando el sistema de navegación con pila.
+     * Esto permite mantener coherencia en la navegación.
+     */
     @FXML
     private void cancelar() {
         SceneManager.goBack();
     }
+
+    /**
+     * Permite seleccionar una imagen desde el sistema de archivos
+     * para asignarla como foto del paciente.
+     * Solo acepta imágenes PNG y JPG.
+     */
     @FXML
     private void cambiarFoto() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar foto del paciente");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter(
+                        "Imágenes", "*.png", "*.jpg", "*.jpeg")
         );
 
-        File file = fileChooser.showOpenDialog(listPacientes.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(
+                listPacientes.getScene().getWindow()
+        );
 
         if (file != null) {
             fotoSeleccionadaPath = file.getAbsolutePath();
@@ -448,6 +573,9 @@ deshabilitarEdicion();
         }
     }
 
+    /**
+     * Abre la vista de citas filtrando por el paciente seleccionado.
+     */
     @FXML
     private void verCitas() {
 
@@ -460,13 +588,15 @@ deshabilitarEdicion();
         }
 
         SceneManager.loadScene(
-
                 "/es/medicarte/view/citas.fxml",
                 "MedicArte - Citas",
                 pacienteSeleccionado.getIdPaciente()
         );
-
     }
+
+    /**
+     * Abre el historial clínico del paciente seleccionado.
+     */
     @FXML
     private void verHistorial() {
 
@@ -485,6 +615,10 @@ deshabilitarEdicion();
         );
     }
 
+    /**
+     * Abre la vista de nueva cita cargando automáticamente
+     * el paciente actualmente seleccionado.
+     */
     public void crearCita() {
 
         if (pacienteSeleccionado == null) {
@@ -508,20 +642,24 @@ deshabilitarEdicion();
         );
     }
 
+    /**
+     * Permite cargar directamente un paciente en la vista
+     * cuando se accede desde otra pantalla.
+     */
     public void setPacienteInicial(int idPaciente) {
 
         Paciente p = pacienteDAO.findById(idPaciente);
 
         if (p != null) {
-            // Rellenar formulario
             cargarPacienteEnFormulario(p);
-
-            // Seleccionar en la lista (si existe)
             listPacientes.getSelectionModel().select(p);
         }
     }
 
-
+    /**
+     * Aplica un estilo visual especial cuando estamos en modo alta,
+     * para indicar al usuario que los campos están activos para edición.
+     */
     private void cambiarColorAlta(){
 
         txtApellidos.setStyle(ESTILO_EDITABLE);
@@ -544,11 +682,11 @@ deshabilitarEdicion();
         txtAntFamiliares.setStyle(ESTILO_EDITABLE);
         txtTratamiento.setStyle(ESTILO_EDITABLE);
         txtAlergias.setStyle(ESTILO_EDITABLE);
-
-
-
     }
 
+    /**
+     * Elimina el estilo visual especial aplicado en modo alta.
+     */
     private void quitarColorAlta(){
 
         txtApellidos.setStyle(null);
@@ -571,10 +709,12 @@ deshabilitarEdicion();
         txtTratamiento.setStyle(null);
         txtAlergias.setStyle(null);
         btnFoto.setDisable(true);
-
-
     }
 
+    /**
+     * Bloquea todos los campos del formulario.
+     * Se utiliza cuando no hay selección o tras guardar.
+     */
     private void deshabilitarEdicion(){
         txtApellidos.setEditable(false);
         txtNombre.setEditable(false);
@@ -596,10 +736,12 @@ deshabilitarEdicion();
         txtAntFamiliares.setEditable(false);
         txtAlergias.setEditable(false);
         txtTratamiento.setEditable(false);
-
-
-
     }
+
+    /**
+     * Activa todos los campos del formulario.
+     * Se usa en modo alta o edición.
+     */
     private void habilitarEdicion(){
         txtApellidos.setEditable(true);
         txtNombre.setEditable(true);
@@ -621,11 +763,12 @@ deshabilitarEdicion();
         txtAntFamiliares.setEditable(true);
         txtAlergias.setEditable(true);
         txtTratamiento.setEditable(true);
-
-
-
     }
 
+    /**
+     * Método auxiliar para forzar modo edición
+     * desde otras partes del sistema.
+     */
     public void setEditarPacientes() {
         habilitarEdicion();
         cambiarColorAlta();

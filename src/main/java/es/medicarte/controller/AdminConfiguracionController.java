@@ -10,34 +10,60 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-
+/**
+ * Controlador de la vista de configuración del administrador.
+ *
+ * Desde esta vista el usuario con rol ADMIN puede:
+ * - Crear nuevos usuarios (ADMIN o MEDICO).
+ * - Eliminar usuarios existentes.
+ * - Cambiar el nombre de la clínica.
+ * - Cambiar el logo de la clínica.
+ *
+ * Esta clase centraliza la lógica de administración del sistema.
+ */
 public class AdminConfiguracionController {
 
     // =========================
     // ALTA DE USUARIO
     // =========================
-    @FXML private TextField txtUsuario;
-    @FXML private PasswordField txtPassword;
-    @FXML private ComboBox<String> cmbRol;
 
-    // DATOS MÉDICO (condicionales)
-    @FXML private TextField txtNombreMedico;
-    @FXML private TextField txtNumColegiado;
-    @FXML private ComboBox<Especialidad> cmbEspecialidad;
+    // Campos del formulario para crear usuario
+    @FXML
+    private TextField txtUsuario;
+    @FXML
+    private PasswordField txtPassword;
+    @FXML
+    private ComboBox<String> cmbRol;
+
+    // Campos adicionales que solo se activan si el rol es MEDICO
+    @FXML
+    private TextField txtNombreMedico;
+    @FXML
+    private TextField txtNumColegiado;
+    @FXML
+    private ComboBox<Especialidad> cmbEspecialidad;
 
     // =========================
     // ELIMINAR USUARIO
     // =========================
-    @FXML private ComboBox<Usuario> cmbUsuarios;
+
+    // ComboBox con los usuarios existentes
+    @FXML
+    private ComboBox<Usuario> cmbUsuarios;
 
     // =========================
     // CONFIGURACIÓN CLÍNICA
     // =========================
-    @FXML private TextField txtNombreClinica;
+
+    // Campo para modificar el nombre de la clínica
+    @FXML
+    private TextField txtNombreClinica;
 
     // =========================
     // DAOs
     // =========================
+
+    // DAOs necesarios para interactuar con base de datos
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
     private final MedicoDAO medicoDAO = new MedicoDAO();
     private final EspecialidadDAO especialidadDAO = new EspecialidadDAO();
@@ -46,31 +72,36 @@ public class AdminConfiguracionController {
     // =========================
     // INITIALIZE
     // =========================
+
+    /**
+     * Método que se ejecuta automáticamente al cargar la vista.
+     * Aquí inicializamos todos los datos necesarios.
+     */
     @FXML
     private void initialize() {
 
-        // Cargar roles
+        // Cargamos los roles disponibles en el sistema
         cmbRol.getItems().addAll("ADMIN", "MEDICO");
 
-        // Cargar especialidades
+        // Cargamos las especialidades desde base de datos
         cmbEspecialidad.getItems().addAll(
                 especialidadDAO.findAll()
         );
 
-        // Cargar usuarios existentes
+        // Cargamos los usuarios existentes en el combo para poder eliminarlos
         cmbUsuarios.getItems().addAll(
                 usuarioDAO.findAll()
         );
 
-        // Listener del rol
+        // Listener para activar o desactivar los campos del médico según el rol seleccionado
         cmbRol.valueProperty().addListener(
                 (obs, oldVal, newVal) -> actualizarCamposMedico(newVal)
         );
 
-        // Por defecto, deshabilitar campos de médico
+        // Por defecto deshabilitamos los campos del médico
         actualizarCamposMedico(null);
 
-        // Cargar nombre de la clínica
+        // Cargamos el nombre actual de la clínica desde la tabla configuración
         txtNombreClinica.setText(
                 configuracionDAO.getValor("NOMBRE_CLINICA")
         );
@@ -79,6 +110,14 @@ public class AdminConfiguracionController {
     // =========================
     // ACTIVAR / DESACTIVAR CAMPOS MÉDICO
     // =========================
+
+    /**
+     * Activa o desactiva los campos específicos del médico
+     * en función del rol seleccionado.
+     * <p>
+     * Si el rol es MEDICO, se habilitan.
+     * Si no, se deshabilitan y se limpian.
+     */
     private void actualizarCamposMedico(String rol) {
 
         boolean esMedico = "MEDICO".equals(rol);
@@ -97,6 +136,12 @@ public class AdminConfiguracionController {
     // =========================
     // CREAR USUARIO
     // =========================
+
+    /**
+     * Crea un nuevo usuario en el sistema.
+     * Si el rol es MEDICO, también crea previamente el médico
+     * en su tabla correspondiente y enlaza el id_medico.
+     */
     @FXML
     private void crearUsuario() {
 
@@ -104,6 +149,7 @@ public class AdminConfiguracionController {
         String password = txtPassword.getText();
         String rol = cmbRol.getValue();
 
+        // Validación básica de campos obligatorios
         if (username == null || username.isBlank()
                 || password == null || password.isBlank()
                 || rol == null) {
@@ -112,17 +158,18 @@ public class AdminConfiguracionController {
             return;
         }
 
+        // Comprobamos que el username no exista ya
         if (usuarioDAO.existsByUsername(username)) {
             mostrarError("El nombre de usuario ya existe.");
             return;
         }
 
-        // Cifrar contraseña
+        // Ciframos la contraseña antes de guardarla en base de datos
         String passwordHash = PasswordUtils.hashPassword(password);
 
         Integer idMedico = null;
 
-        // Si es médico, crear médico primero
+        // Si el rol es MEDICO, creamos primero el médico
         if ("MEDICO".equals(rol)) {
 
             if (txtNombreMedico.getText().isBlank()
@@ -141,10 +188,11 @@ public class AdminConfiguracionController {
             );
             medico.setActivo(true);
 
+            // Insertamos médico y obtenemos su id
             idMedico = medicoDAO.insert(medico);
         }
 
-        // Crear usuario
+        // Creamos el usuario
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
         usuario.setPasswordHash(passwordHash);
@@ -163,6 +211,11 @@ public class AdminConfiguracionController {
     // =========================
     // ELIMINAR USUARIO
     // =========================
+
+    /**
+     * Elimina un usuario seleccionado.
+     * No permite eliminar el usuario actualmente logueado.
+     */
     @FXML
     private void eliminarUsuario() {
 
@@ -173,7 +226,7 @@ public class AdminConfiguracionController {
             return;
         }
 
-        // No permitir borrar el usuario logueado
+        // Evitamos que el admin borre su propio usuario
         if (seleccionado.getIdUsuario()
                 == UserSession.getUsuario().getIdUsuario()) {
 
@@ -199,6 +252,10 @@ public class AdminConfiguracionController {
     // =========================
     // CONFIGURACIÓN CLÍNICA
     // =========================
+
+    /**
+     * Actualiza el nombre de la clínica en la tabla configuración.
+     */
     @FXML
     private void cambiarNombreClinica() {
 
@@ -216,6 +273,10 @@ public class AdminConfiguracionController {
     // =========================
     // MÉTODOS AUXILIARES
     // =========================
+
+    /**
+     * Limpia el formulario de creación de usuario.
+     */
     private void limpiarFormularioUsuario() {
         txtUsuario.clear();
         txtPassword.clear();
@@ -223,6 +284,9 @@ public class AdminConfiguracionController {
         actualizarCamposMedico(null);
     }
 
+    /**
+     * Recarga la lista de usuarios en el ComboBox.
+     */
     private void refrescarUsuarios() {
         cmbUsuarios.getItems().clear();
         cmbUsuarios.getItems().addAll(
@@ -230,21 +294,30 @@ public class AdminConfiguracionController {
         );
     }
 
+    /**
+     * Muestra un mensaje de error.
+     */
     private void mostrarError(String msg) {
         new Alert(Alert.AlertType.ERROR, msg).showAndWait();
     }
 
+    /**
+     * Muestra un mensaje informativo.
+     */
     private void mostrarInfo(String msg) {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }
 
+    /**
+     * Permite cambiar el logo de la clínica.
+     * Guarda la ruta en la tabla configuración.
+     */
     @FXML
     private void cambiarLogoClinica() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar logo de la clínica");
 
-        // Filtros de imagen
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(
                         "Imágenes",
@@ -252,17 +325,14 @@ public class AdminConfiguracionController {
                 )
         );
 
-        // Abrimos el selector
         File file = fileChooser.showOpenDialog(
                 txtNombreClinica.getScene().getWindow()
         );
 
         if (file == null) {
-            // El usuario canceló
             return;
         }
 
-        // Guardamos la ruta en la configuración
         configuracionDAO.setValor(
                 "LOGO_CLINICA",
                 file.getAbsolutePath()
@@ -270,6 +340,9 @@ public class AdminConfiguracionController {
 
         mostrarInfo("Logo de la clínica actualizado correctamente.");
     }
+}
+
+
 // FORMA DE RECUPERAR EL LOGO CUANOD LO QUIERA USAR
 
 
@@ -283,4 +356,4 @@ if (logoPath != null) {
 
 
 
-}
+
