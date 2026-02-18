@@ -11,7 +11,7 @@ public class IntegracionFlujoTest {
     @Test
     void flujoLoginPacienteYCitas() {
 
-        // 1️⃣ LOGIN
+        // LOGIN
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         Usuario usuario = usuarioDAO.findByUsername("medico1");
 
@@ -25,7 +25,7 @@ public class IntegracionFlujoTest {
 
         assertTrue(passwordOk, "La contraseña debería ser válida");
 
-        // 2️⃣ OBTENER PACIENTES
+        // OBTENER PACIENTES
         PacienteDAO pacienteDAO = new PacienteDAO();
         List<Paciente> pacientes = pacienteDAO.findAll();
 
@@ -35,13 +35,12 @@ public class IntegracionFlujoTest {
         Paciente paciente = pacientes.get(0);
         assertNotNull(paciente.getIdPaciente());
 
-        // 3️⃣ OBTENER CITAS DEL PACIENTE
+        // OBTENER CITAS DEL PACIENTE
         CitaDAO citaDAO = new CitaDAO();
         List<Cita> citas = citaDAO.findByPaciente(paciente.getIdPaciente());
 
         assertNotNull(citas, "La lista de citas no debe ser null");
 
-        // No obligamos a que tenga citas
-        // solo comprobamos que el sistema responde correctamente
+
     }
 }

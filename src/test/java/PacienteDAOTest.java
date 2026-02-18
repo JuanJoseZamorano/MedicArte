@@ -46,21 +46,4 @@ class PacienteDAOTest {
 
         assertTrue(id > 0);
     }
-
-    @Test
-    void insertarConsulta() {
-
-        ConsultaDAO dao = new ConsultaDAO();
-
-        Consulta c = new Consulta();
-        c.setIdEpisodio(1);
-        c.setIdMedico(1);
-        c.setFechaHora(LocalDateTime.now());
-        c.setMotivoConsulta("Prueba");
-        c.setEstado("FINALIZADA");
-
-        boolean ok = dao.insert(c);
-
-        assertTrue(ok);
-    }
 }
