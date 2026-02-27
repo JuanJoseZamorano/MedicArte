@@ -44,7 +44,7 @@
                 <graphic>
                     <ImageView fitWidth="147" fitHeight="51.5" preserveRatio="true">
                         <image>
-                            <Image url="@/img/pacientes.png"/>
+                            <Image url="@../../../img/pacientes.png"/>
                         </image>
                     </ImageView>
                 </graphic>
@@ -55,7 +55,7 @@
                 <graphic>
                     <ImageView fitWidth="118.5" fitHeight="52" preserveRatio="true">
                         <image>
-                            <Image url="@/img/citas.png"/>
+                            <Image url="@../../../img/citas.png"/>
                         </image>
                     </ImageView>
                 </graphic>
