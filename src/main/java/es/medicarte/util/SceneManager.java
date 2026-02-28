@@ -285,4 +285,13 @@ public class SceneManager {
             stage.show();
         }
     }
+
+    /**
+     * Limpia completamente la pila de navegación.
+     * Se utiliza cuando se navega a una pantalla principal
+     * desde la que no tiene sentido volver atrás.
+     */
+    public static void clearStack() {
+        history.clear();
+    }
 }

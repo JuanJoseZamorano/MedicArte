@@ -509,9 +509,10 @@ public class ConsultaController {
         ok.showAndWait();
 
         // Volvemos a la agenda
+        SceneManager.clearStack();
         SceneManager.loadScene(
-                "/es/medicarte/view/citas.fxml",
-                "MedicArte - Citas"
+                "/es/medicarte/view/medico_dashboard.fxml",
+                "MedicArte - Área Médica"
         );
     }
 
